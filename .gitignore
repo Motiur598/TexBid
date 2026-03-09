@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Secrets
+*.sqlite3
+
+# OS specific
+.DS_Store

@@ -1,0 +1,536 @@
+{% extends "base.html" %}
+
+{% block title %}Supplier Dashboard - TexBid{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="h-[calc(100vh-80px)] flex overflow-hidden bg-slate-50">
+
+    <!-- LEFT SIDEBAR: Incoming Opportunities (25%) -->
+    <div
+        class="w-1/4 min-w-[320px] max-w-[400px] border-r border-slate-200 bg-slate-50 flex flex-col h-full overflow-hidden">
+
+        <!-- Sidebar Header -->
+        <div class="p-5 border-b border-slate-200 bg-white sticky top-0 z-10 shrink-0">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                Incoming Opportunities
+                <span class="bg-[#2563eb] text-white text-xs px-2 py-0.5 rounded-full">{{ rfqs|length }}</span>
+            </h2>
+            <div class="mt-3 flex gap-2">
+                <input type="text" placeholder="Search orders..."
+                    class="w-full text-sm border-slate-200 rounded-md bg-slate-50 focus:border-[#2563eb] focus:ring-[#2563eb]">
+            </div>
+        </div>
+
+        <!-- Scrollable List of RFQs -->
+        <div class="overflow-y-auto flex-1 p-3 space-y-3">
+
+            {% if rfqs|length == 0 %}
+            <div class="text-center py-10">
+                <p class="text-sm text-slate-500">No active RFQs at the moment.</p>
+            </div>
+            {% else %}
+            {% for rfq in rfqs %}
+            <!-- RFQ Card (Compact) -->
+            <div
+                class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:border-[#2563eb] hover:shadow-md transition cursor-pointer flex flex-col gap-3 group">
+                <!-- Top section: Thumbnail + Title -->
+                <div class="flex gap-3">
+                    <div
+                        class="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 shrink-0 flex items-center justify-center overflow-hidden">
+                        <!-- Mock Thumbnail -->
+                        <svg class="w-8 h-8 text-slate-300 group-hover:text-[#2563eb] transition-colors"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 9v11a2 2 0 01-2 2H6a2 2 0 01-2-2V9" />
+                            <path d="M9 22V12h6v10m-1.5-13V2l3-2h-9l3 2v7.5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3
+                            class="font-bold text-slate-800 text-sm leading-tight group-hover:text-[#2563eb] transition-colors line-clamp-2">
+                            {{ rfq.title if rfq.title else (rfq.product_category ~ ' Request') }}
+                        </h3>
+                        <span
+                            class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ 'bg-red-50 text-red-600 border border-red-100' if rfq.urgency_level == 'HIGH' else ('bg-orange-50 text-orange-600 border border-orange-100' if rfq.urgency_level == 'MEDIUM' else 'bg-blue-50 text-blue-600 border border-blue-100') }}">
+                            {{ rfq.urgency_level if rfq.urgency_level else 'STANDARD' }} URGENCY
+                        </span>
+                    </div>
+                </div>
+
+                <!-- The Big Three Stats -->
+                <div class="bg-slate-50 rounded-lg p-2.5 grid grid-cols-2 gap-2 border border-slate-100">
+                    <div>
+                        <p class="text-[10px] text-slate-500 font-medium uppercase">Quantity</p>
+                        <p class="font-bold text-slate-800 text-sm">{{ "{:,}".format(rfq.quantity|int) }} pcs</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-500 font-medium uppercase">Deadline</p>
+                        <p class="font-bold text-slate-800 text-sm">{{ rfq.target_delivery_date if
+                            rfq.target_delivery_date else 'TBD' }}</p>
+                    </div>
+                </div>
+
+                <!-- Buyer Badge -->
+                <div class="flex items-center gap-1.5 pt-1">
+                    <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                        </path>
+                    </svg>
+                    <span class="text-xs font-bold text-slate-700">Verified Buyer</span>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <!-- MAIN WORKSPACE: The RFQ Brief (75%) -->
+    <div class="flex-1 flex flex-col relative h-full overflow-hidden bg-white">
+
+        <!-- Header area for the selected RFQ -->
+        <div class="p-6 border-b border-slate-200 shrink-0 bg-white z-10">
+            <div class="flex justify-between items-start max-w-5xl mx-auto">
+                <div>
+                    <!-- Breadcrumb -->
+                    <div class="text-xs font-medium text-slate-500 mb-2 flex items-center gap-2">
+                        <span>Dashboard</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                        <span>Incoming Orders</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                            </path>
+                        </svg>
+                        <span class="text-slate-800">RFQ Brief</span>
+                    </div>
+
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
+                        RFQ Brief: Autumn 2024 Cotton Tee <!-- Placeholder until JS loads data -->
+                    </h1>
+
+                    <div class="flex flex-wrap gap-4">
+                        <!-- Buyer Profile Card -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-sm">
+                                CH</div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase">Buyer Profile</p>
+                                <p class="text-sm font-semibold text-slate-800">Chic Threads | UK | 15 Orders</p>
+                            </div>
+                        </div>
+
+                        <!-- Match Score -->
+                        <div
+                            class="bg-emerald-50 border border-emerald-100 rounded-lg px-4 py-2 flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-full border-4 border-emerald-500 flex items-center justify-center">
+                                <span class="text-[10px] font-bold text-emerald-700">95%</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-emerald-600 font-bold uppercase">Match Score</p>
+                                <p class="text-sm font-bold text-emerald-800">High Compatibility</p>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2 flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                            <div>
+                                <p class="text-[10px] text-blue-600 font-bold uppercase">Status</p>
+                                <p class="text-sm font-bold text-blue-800">ACTIVE Bidding</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable content area for the Brief -->
+        <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
+            <div class="max-w-5xl mx-auto space-y-8 pb-32"> <!-- Padding bottom for floating widget -->
+
+                <!-- Section B: Visual Assets -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h2 class="font-bold text-slate-800 text-lg">Visual Assets</h2>
+                    </div>
+
+                    <div class="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Thumbnails (Mocked for visual structure) -->
+                        <div
+                            class="group relative bg-slate-100 rounded-xl overflow-hidden aspect-square border border-slate-200 flex flex-col items-center justify-center">
+                            <svg class="w-16 h-16 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M20 9v11a2 2 0 01-2 2H6a2 2 0 01-2-2V9" />
+                                <path d="M9 22V12h6v10m-1.5-13V2l3-2h-9l3 2v7.5" />
+                            </svg>
+                            <span class="absolute bottom-2 left-3 text-xs font-medium text-slate-700">Front View
+                                Sketch</span>
+                        </div>
+
+                        <div
+                            class="group relative bg-slate-200 rounded-xl overflow-hidden aspect-square border border-slate-200">
+                            <div class="w-full h-full bg-gradient-to-br from-slate-200 to-slate-400"></div>
+                            <span
+                                class="absolute bottom-2 left-3 text-xs font-medium text-white shadow-sm drop-shadow-md">3D
+                                Product Render</span>
+                        </div>
+
+                        <div
+                            class="group relative bg-[#e3e3e3] rounded-xl overflow-hidden aspect-square border border-slate-200">
+                            <div
+                                class="w-full h-full bg-[#eaeaea] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')] opacity-50 mix-blend-multiply">
+                            </div>
+                            <span
+                                class="absolute bottom-2 left-3 text-xs font-medium text-slate-700 bg-white/70 px-1 rounded">Fabric
+                                Detail</span>
+                        </div>
+
+                        <!-- Pantone Palette Mock -->
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 p-3 flex flex-col justify-between">
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="w-full aspect-square rounded-full bg-[#1b4478] shadow-sm"></div>
+                                <div class="w-full aspect-square rounded-full bg-[#41403c] shadow-sm"></div>
+                                <div class="w-full aspect-square rounded-full bg-[#c29c69] shadow-sm"></div>
+                                <div class="col-span-2 h-6 rounded bg-[#2c4059] shadow-sm"></div>
+                                <div class="col-span-1 h-6 rounded bg-[#e3e3e3] shadow-sm"></div>
+                            </div>
+                            <span class="text-xs font-bold text-slate-700 mt-2 text-center">Extracted Palette</span>
+                        </div>
+                    </div>
+
+                    <!-- Tech Pack Button -->
+                    <div class="px-5 pb-5">
+                        <button
+                            class="w-full flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#0d615a] text-white font-bold py-3 rounded-lg shadow-sm transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Download Full Tech Pack (.PDF)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section C: Technical Grid -->
+                <div>
+                    <h2 class="font-bold text-slate-800 text-lg mb-4">Technical Grid</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <!-- Col 1: Fabric Spec -->
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 h-full">
+                            <h3 class="font-bold text-slate-800 text-sm mb-4 border-b border-slate-100 pb-2">Fabric
+                                Specifications</h3>
+                            <div
+                                class="inline-block bg-[#1b4478] text-white px-3 py-1.5 rounded text-sm font-medium mb-3">
+                                100% Cotton, 180 GSM
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-slate-500">
+                                <span>(Standard Weight)</span>
+                                <svg class="w-4 h-4 text-slate-400 cursor-help" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Required Certs</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded">OEKO-TEX</span>
+                                    <span
+                                        class="text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded">GOTS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Col 2: Quantity Breakup -->
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-0 h-full overflow-hidden">
+                            <h3 class="font-bold text-slate-800 text-sm p-5 border-b border-slate-100 bg-slate-50">
+                                Quantity & Size Breakup</h3>
+                            <table class="w-full text-sm text-left text-slate-600">
+                                <thead class="text-xs text-slate-500 bg-white border-b border-slate-200 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-2 font-bold">Size</th>
+                                        <th class="px-4 py-2 font-bold">Color</th>
+                                        <th class="px-4 py-2 font-bold text-right">Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-slate-100">
+                                        <td class="px-4 py-2 font-medium">S</td>
+                                        <td class="px-4 py-2">Black</td>
+                                        <td class="px-4 py-2 text-right font-medium">1,000</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-100">
+                                        <td class="px-4 py-2 font-medium">M</td>
+                                        <td class="px-4 py-2">White</td>
+                                        <td class="px-4 py-2 text-right font-medium">1,000</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-100">
+                                        <td class="px-4 py-2 font-medium">L</td>
+                                        <td class="px-4 py-2">Navy</td>
+                                        <td class="px-4 py-2 text-right font-medium">1,000</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-200 bg-slate-50">
+                                        <td class="px-4 py-3 font-bold text-slate-800" colspan="2">XL</td>
+                                        <td class="px-4 py-3 text-right font-bold text-slate-800 text-base">Total:
+                                            10,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Col 3: Logistics -->
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 h-full relative">
+                            <h3 class="font-bold text-slate-800 text-sm mb-4 border-b border-slate-100 pb-2">Logistics
+                            </h3>
+
+                            <dl class="space-y-4">
+                                <div>
+                                    <dt class="text-xs font-bold text-slate-500 uppercase mb-1">Target Delivery</dt>
+                                    <dd class="text-sm font-semibold text-slate-800">Oct 15, 2024</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-xs font-bold text-slate-500 uppercase mb-1">Requested Incoterms</dt>
+                                    <dd class="text-sm font-semibold text-slate-800">FOB</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-xs font-bold text-slate-500 uppercase mb-1">Destination</dt>
+                                    <dd class="text-sm font-semibold text-slate-800">Port of LA</dd>
+                                </div>
+                            </dl>
+
+                            <!-- background decoration -->
+                            <svg class="absolute bottom-2 right-2 w-16 h-16 text-slate-100 -z-1" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLOATING WIDGET: Smart Quoting -->
+        <div id="quoting-widget"
+            class="fixed top-[calc(100vh-450px)] right-8 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200/60 overflow-hidden z-50">
+            <div id="quoting-widget-header"
+                class="p-4 bg-slate-800 text-white border-b border-slate-700 cursor-move flex items-center justify-between select-none">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    My Bid Calculator
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                </h3>
+                <button type="button" id="quoting-widget-toggle"
+                    class="text-slate-400 hover:text-white transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="quoting-widget-form" action="/quote/submit" method="POST" class="p-5 space-y-4">
+                <!-- CM Cost -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">CM (Cut & Make) Cost per piece</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-slate-500 sm:text-sm">$</span>
+                        </div>
+                        <input type="number" step="0.01" name="cm_cost"
+                            class="pl-7 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]"
+                            placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <!-- Fabric Cost -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Fabric/Material Cost per piece</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-slate-500 sm:text-sm">$</span>
+                        </div>
+                        <input type="number" step="0.01" name="fabric_cost"
+                            class="pl-7 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]"
+                            placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Auto-Calculate Total Area -->
+                <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-100">
+                    <span class="text-sm font-bold text-slate-700">Total Unit Price</span>
+                    <div class="relative w-24">
+                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                            <span class="text-slate-500 text-sm font-bold">$</span>
+                        </div>
+                        <input type="number" step="0.01" id="total_price" readonly
+                            class="pl-6 w-full bg-transparent border-none text-right font-extrabold text-slate-900 text-lg focus:ring-0 p-0"
+                            placeholder="0.00">
+                    </div>
+                </div>
+
+                <!-- Lead Time -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Estimated Lead Time (Days)</label>
+                    <input type="number" name="lead_time"
+                        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]"
+                        placeholder="e.g. 45" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full flex items-center justify-center gap-2 bg-[#0f766e] text-white font-bold py-3 rounded-lg shadow-sm hover:bg-[#0d615a] transition mt-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Send Quote
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // Extremely basic auto-calc for the mock form
+    document.addEventListener('DOMContentLoaded', () => {
+        const cmInput = document.querySelector('input[name="cm_cost"]');
+        const fabricInput = document.querySelector('input[name="fabric_cost"]');
+        const totalInput = document.getElementById('total_price');
+
+        function calc() {
+            const cm = parseFloat(cmInput.value) || 0;
+            const fab = parseFloat(fabricInput.value) || 0;
+            totalInput.value = (cm + fab).toFixed(2);
+        }
+
+        if (cmInput && fabricInput) {
+            cmInput.addEventListener('input', calc);
+            fabricInput.addEventListener('input', calc);
+        }
+
+        // Widget Logic: Drag and Minimize
+        const widget = document.getElementById('quoting-widget');
+        const header = document.getElementById('quoting-widget-header');
+        const toggleBtn = document.getElementById('quoting-widget-toggle');
+        const formBody = document.getElementById('quoting-widget-form');
+
+        // Minimize
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // don't trigger drag
+            formBody.classList.toggle('hidden');
+            const svg = toggleBtn.querySelector('svg');
+            if (formBody.classList.contains('hidden')) {
+                svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>';
+            } else {
+                svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>';
+            }
+        });
+
+        // Draggable
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        header.addEventListener('mousedown', dragStart);
+
+        function dragStart(e) {
+            if (e.target === toggleBtn || toggleBtn.contains(e.target)) return;
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            isDragging = true;
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+
+                // Calculate the proposed new position
+                let newX = e.clientX - initialX;
+                let newY = e.clientY - initialY;
+
+                // Calculate boundaries
+                const widgetRect = widget.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+
+                // Get the current computed style to find where the box actually starts
+                // since tailwind handles its initial positioning via absolute right/bottom
+                const computedStyle = window.getComputedStyle(widget);
+
+                // Max movement in X direction (can't go further left than the screen width minus its absolute right position offset)
+                // Max movement in Y direction (can't go further up than the screen height minus its absolute bottom position offset)
+
+                // The easiest solid boundary check when using transforms is to check the real bounding client rect
+                // against the viewport on each move pixel.
+
+                // Calculate theoretical next rect
+                const nextRectLeft = widgetRect.left + (newX - xOffset);
+                const nextRectRight = widgetRect.right + (newX - xOffset);
+                const nextRectTop = widgetRect.top + (newY - yOffset);
+                const nextRectBottom = widgetRect.bottom + (newY - yOffset);
+
+                // X Bounds Check
+                if (nextRectLeft < 0) {
+                    newX = xOffset - widgetRect.left; // Snap to left edge
+                } else if (nextRectRight > viewportWidth) {
+                    newX = xOffset + (viewportWidth - widgetRect.right); // Snap to right edge
+                }
+
+                // Y Bounds Check
+                if (nextRectTop < 85) {
+                    newY = yOffset + (85 - widgetRect.top); // Snap to top edge (below navbar)
+                } else if (nextRectBottom > viewportHeight) {
+                    newY = yOffset + (viewportHeight - widgetRect.bottom); // Snap to bottom edge
+                }
+
+                currentX = newX;
+                currentY = newY;
+                xOffset = currentX;
+                yOffset = currentY;
+
+                setTranslate(currentX, currentY, widget);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', dragEnd);
+        }
+    });
+</script>
+
+{% endblock %}

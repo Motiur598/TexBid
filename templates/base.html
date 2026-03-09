@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TexBid - Garment Order Exchange{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a', // Deep navy/dark blue
+                            primary: '#1d4ed8', // Vibrant blue
+                            light: '#3b82f6', // Light vibrant blue
+                            accent: '#10b981', // Vivid Green accent
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+</head>
+
+<body class="font-sans text-gray-800 bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-brand-dark bg-opacity-95 backdrop-blur shadow-md sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center -ml-4 md:-ml-8 lg:-ml-12">
+                    <a href="/" class="flex-shrink-0 flex items-center gap-3 group">
+                        <!-- Logo mark -->
+                        <div class="relative w-10 h-10 flex items-center justify-center">
+                            <div
+                                class="absolute inset-0 bg-brand-primary rounded transform rotate-45 group-hover:rotate-90 transition-transform duration-500 opacity-80">
+                            </div>
+                            <div
+                                class="absolute inset-0 bg-brand-light rounded transform rotate-45 translate-x-1.5 translate-y-1.5 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500 opacity-90 backdrop-blur-sm mix-blend-screen">
+                            </div>
+                            <span
+                                class="relative z-10 text-white font-bold text-sm transform -rotate-45 block">TB</span>
+                        </div>
+                        <span class="text-2xl font-extrabold text-white tracking-tight ml-1">Tex<span
+                                class="text-brand-light">Bid</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:ml-8 lg:flex lg:space-x-8 items-center">
+                    <a href="/"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="/dashboard/supplier"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Browse
+                        RFQs</a>
+                    <a href="/verify/supplier"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Supplier
+                        Center</a>
+                    <a href="/verify/buyer"
+                        class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1">
+                        <svg class="h-4 w-4 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                        Verify Business
+                    </a>
+                </div>
+
+                <!-- CTA buttons -->
+                <div class="hidden lg:flex items-center space-x-5">
+                    <a href="#" class="text-gray-300 hover:text-white text-sm font-medium transition-colors">Log In</a>
+                    <a href="/rfq/create"
+                        class="bg-[#2563eb] hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 ml-4">
+                        Create RFQ
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex items-center lg:hidden">
+                    <button type="button" class="text-gray-300 hover:text-white p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+    <footer class="bg-brand-dark text-white pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="/" class="flex items-center gap-3 mb-6">
+                        <div class="relative w-8 h-8 flex items-center justify-center opacity-80">
+                            <div class="absolute inset-0 bg-brand-primary rounded transform rotate-45"></div>
+                            <div
+                                class="absolute inset-0 bg-brand-light rounded transform rotate-45 translate-x-1 translate-y-1 mix-blend-screen">
+                            </div>
+                        </div>
+                        <span class="text-2xl font-extrabold text-white tracking-tight">Tex<span
+                                class="text-brand-light">Bid</span></span>
+                    </a>
+                    <p class="text-base text-gray-400 mb-6 max-w-sm leading-relaxed">
+                        The ultimate digital marketplace for garment buyers and suppliers. Ensuring transparency,
+                        efficiency, and trust through smart RFQs, live bidding, and secure escrow.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5">Platform</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Smart RFQ
+                                Builder</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Reverse
+                                Auctions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Escrow
+                                Protection</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Two-Way
+                                Ratings</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5">Company</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">About
+                                Us</a></li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-brand-light text-sm transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Terms of
+                                Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-brand-light text-sm transition-colors">Privacy
+                                Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-sm text-gray-500">&copy; 2026 TexBid Garment Order Exchange. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+</body>
+
+</html>

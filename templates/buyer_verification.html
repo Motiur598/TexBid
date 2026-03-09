@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Verification - TexBid{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen bg-slate-50 py-16 sm:py-24">
+    <!-- Decorative Elements -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div
+            class="absolute top-0 left-1/2 -ml-[300px] w-[600px] h-[600px] opacity-10 blur-3xl rounded-full bg-brand-primary">
+        </div>
+        <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] opacity-10 blur-3xl rounded-full bg-brand-accent">
+        </div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 animate-fade-in-up">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Business Verification</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+                Secure your buyer profile to engage in high-value tenders, reverse auctions, and access thousands of
+                verified global suppliers.
+            </p>
+        </div>
+
+        {% if success %}
+        <div
+            class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-8 flex items-start gap-4 animate-fade-in-up shadow-sm">
+            <div
+                class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-emerald-800">Application Submitted Successfully</h3>
+                <p class="text-emerald-700 mt-1">Your documents are under review. Our compliance team will notify you
+                    within 24-48 business hours.</p>
+                <div class="mt-4">
+                    <a href="/"
+                        class="text-sm font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
+                        &larr; Return to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+
+        <div
+            class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-200 overflow-hidden animate-fade-in-up delay-200">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+                <span class="flex h-3 w-3 relative">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-primary"></span>
+                </span>
+                <h2 class="font-bold text-slate-800">Secure Document Submission</h2>
+            </div>
+
+            <form action="/verify/buyer" method="POST" enctype="multipart/form-data" class="p-8">
+                <div class="space-y-8">
+
+                    <!-- Section 1 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2">1. Company
+                            Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Legal Company Name
+                                    *</label>
+                                <input type="text" name="company_name" required
+                                    class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all bg-white"
+                                    placeholder="e.g. Acme Textiles Ltd.">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Registration/Tax Number
+                                    *</label>
+                                <input type="text" name="registration_number" required
+                                    class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all bg-white"
+                                    placeholder="TIN / EIN / CRN">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Registered Address
+                                    *</label>
+                                <textarea name="address" rows="2" required
+                                    class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all bg-white"
+                                    placeholder="Street, City, State, Country, ZIP"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2 -->
+                    <div>
+                        <h3
+                            class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-2 flex justify-between items-end">
+                            2. Mandatory Documents
+                            <span class="text-xs font-normal text-slate-500">Supported: PDF, JPG, PNG (Max 5MB)</span>
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- File Upload Area 1 -->
+                            <div class="relative group cursor-pointer">
+                                <div
+                                    class="absolute -inset-1 bg-gradient-to-r from-brand-light to-brand-primary rounded-xl blur opacity-10 group-hover:opacity-30 transition duration-300">
+                                </div>
+                                <div
+                                    class="relative border-2 border-dashed border-slate-300 hover:border-brand-primary rounded-xl p-6 bg-slate-50 text-center transition-all">
+                                    <input type="file" name="trade_license" id="trade_license"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required
+                                        accept=".pdf,.jpg,.jpeg,.png">
+                                    <svg class="mx-auto h-12 w-12 text-slate-400 group-hover:text-brand-primary transition-colors"
+                                        stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path
+                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="mt-4 flex text-sm justify-center text-slate-600">
+                                        <label for="trade_license"
+                                            class="relative cursor-pointer bg-white rounded-md font-bold text-brand-primary hover:text-brand-light focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-primary px-1">
+                                            <span>Upload Trade License *</span>
+                                        </label>
+                                    </div>
+                                    <p class="mt-1 text-xs text-slate-500" id="filename1">Or drag and drop</p>
+                                </div>
+                            </div>
+
+                            <!-- File Upload Area 2 -->
+                            <div class="relative group cursor-pointer">
+                                <div
+                                    class="relative border-2 border-dashed border-slate-300 hover:border-brand-primary rounded-xl p-6 bg-slate-50 text-center transition-all">
+                                    <input type="file" name="tax_document" id="tax_document"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        accept=".pdf,.jpg,.jpeg,.png">
+                                    <div
+                                        class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 group-hover:bg-blue-50 transition-colors">
+                                        <svg class="h-6 w-6 text-slate-500 group-hover:text-brand-primary transition-colors"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <div class="mt-4 flex justify-center text-sm text-slate-600">
+                                        <label for="tax_document"
+                                            class="font-bold text-brand-primary hover:text-brand-light px-1">
+                                            <span>Upload Tax Certificate (Optional)</span>
+                                        </label>
+                                    </div>
+                                    <p class="mt-1 text-xs text-slate-500" id="filename2">Helps expedite priority
+                                        approval</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit action -->
+                    <div
+                        class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-xs text-slate-500 max-w-sm flex items-start gap-2">
+                            <svg class="w-4 h-4 text-brand-accent mt-0.5 flex-shrink-0" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                </path>
+                            </svg>
+                            Information is encrypted and stored according to our strict privacy and data compliance
+                            guidelines.
+                        </div>
+                        <button type="submit"
+                            class="w-full sm:w-auto px-8 py-3.5 bg-brand-primary hover:bg-brand-dark text-white font-bold rounded-lg shadow-lg shadow-brand-primary/30 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                            Submit for Verification
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Simple script to show selected filenames
+    document.getElementById('trade_license').addEventListener('change', function (e) {
+        if (e.target.files[0]) {
+            document.getElementById('filename1').textContent = "Selected: " + e.target.files[0].name;
+            document.getElementById('filename1').classList.add('text-brand-primary', 'font-medium');
+        }
+    });
+    document.getElementById('tax_document').addEventListener('change', function (e) {
+        if (e.target.files[0]) {
+            document.getElementById('filename2').textContent = "Selected: " + e.target.files[0].name;
+            document.getElementById('filename2').classList.add('text-brand-primary', 'font-medium');
+        }
+    });
+</script>
+{% endblock %}

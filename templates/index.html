@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-brand-dark pb-24 pt-32 lg:pb-36 lg:pt-40">
+    <!-- Abstract Background Pattern -->
+    <div class="absolute inset-0 z-0 opacity-20">
+        <svg class="absolute left-0 top-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="grid-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1d4ed8" />
+                    <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+            </defs>
+            <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="url(#grid-grad)" />
+            <!-- Mesh pattern -->
+            <path class="stroke-brand-light" stroke-width="0.1" fill="none"
+                d="M0,10 L100,10 M0,20 L100,20 M0,30 L100,30 M0,40 L100,40 M0,50 L100,50 M0,60 L100,60 M0,70 L100,70 M0,80 L100,80 M0,90 L100,90 M10,0 L10,100 M20,0 L20,100 M30,0 L30,100 M40,0 L40,100 M50,0 L50,100 M60,0 L60,100 M70,0 L70,100 M80,0 L80,100 M90,0 L90,100" />
+        </svg>
+    </div>
+
+    <!-- Floating Glass Elements -->
+    <div
+        class="absolute right-[10%] top-[20%] z-0 h-48 w-48 rounded-full bg-brand-primary blur-3xl opacity-50 animate-pulse-slow">
+    </div>
+    <div
+        class="absolute left-[15%] bottom-[10%] z-0 h-64 w-64 rounded-full bg-brand-accent blur-3xl opacity-30 animate-pulse-slow delay-1000">
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8 animate-fade-in-up">
+            <span class="flex h-2 w-2 relative">
+                <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-accent"></span>
+            </span>
+            <span class="text-sm font-medium text-white tracking-wide">Next-Gen Order Processing</span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up delay-200">
+            Garment Order <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-accent">Exchange</span>
+        </h1>
+        <p
+            class="mt-6 max-w-2xl mx-auto text-xl md:text-2xl text-gray-300 mb-10 animate-fade-in-up delay-300 leading-relaxed">
+            The premier digital marketplace connecting visionary garment buyers with top-tier suppliers globally. Smart
+            RFQs, real-time reverse auctions, and secure escrow.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-5 animate-fade-in-up delay-500">
+            <a href="/rfq/create"
+                class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-xl text-white bg-brand-accent hover:bg-emerald-500 shadow-xl shadow-emerald-500/30 transition-all hover:-translate-y-1 hover:shadow-emerald-500/50">
+                Post an RFQ Now
+            </a>
+            <a href="/verify/supplier"
+                class="inline-flex items-center justify-center px-8 py-4 border-2 border-slate-600 text-lg font-bold rounded-xl text-white bg-transparent hover:bg-white/5 transition-all hover:-translate-y-1 backdrop-blur-sm">
+                Join as Supplier
+            </a>
+        </div>
+
+        <div class="mt-16 flex justify-center gap-8 text-sm font-medium text-gray-400 animate-fade-in-up delay-700">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Verified Suppliers
+            </div>
+            <div class="hidden sm:flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Escrow Protected
+            </div>
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Real-Time Tracking
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dashboard Mockup/Visual -->
+<section
+    class="relative z-20 -mt-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 hidden md:block animate-fade-in-up delay-1000">
+    <div
+        class="rounded-2xl bg-white/90 shadow-2xl overflow-hidden glassmorphism border border-white/50 backdrop-blur-xl flex flex-col items-center group">
+        <div
+            class="w-full bg-slate-100/80 border-b border-gray-200 px-5 py-3 flex items-center gap-2 shadow-sm relative">
+            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+            <div
+                class="absolute left-1/2 transform -translate-x-1/2 text-xs font-semibold text-gray-500 bg-white px-4 py-1 rounded-full shadow-sm">
+                TexBid Analytics Hub</div>
+        </div>
+        <div class="w-full relative bg-slate-50/50 p-8">
+            <!-- Placeholder for Dashboard Elements -->
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-end mb-6">
+                    <h3 class="text-2xl font-extrabold text-slate-800">Live Trade Overview</h3>
+                    <span class="text-sm font-medium text-brand-primary bg-blue-50 px-3 py-1 rounded-full">Automated
+                        Mode: Active</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <!-- Card 1: Active RFQ -->
+                    <div
+                        class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col h-full transform transition duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-light/30 cursor-pointer relative overflow-hidden group/card text-left">
+                        <div
+                            class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-brand-light/10 to-transparent rounded-bl-full -z-10 transition-transform group-hover/card:scale-150">
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 bg-brand-light/10 text-brand-primary rounded">Accepting
+                                Bids</span>
+                            <span class="text-slate-400 text-xs font-medium flex items-center gap-1"><svg
+                                    class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg> 2h left</span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-base mb-1">100k Cotton Premium Tees</h4>
+                        <p class="text-slate-500 text-xs">Target: $2.50/unit • CIF New York</p>
+
+                        <div class="mt-6 pt-4 border-t border-slate-50 flex justify-between items-end">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-400 font-medium uppercase">Current Best</span>
+                                <span class="text-brand-accent font-extrabold text-lg">$2.45</span>
+                            </div>
+                            <div
+                                class="bg-slate-50 px-2 py-1 rounded text-xs text-brand-primary font-semibold flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                12 Bids
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Closed Reverse Auction -->
+                    <div
+                        class="bg-gradient-to-br from-white to-emerald-50/30 rounded-xl p-5 shadow-sm border border-brand-accent/30 flex flex-col h-full transform transition duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-accent/50 cursor-pointer relative overflow-hidden text-left">
+                        <div
+                            class="absolute top-0 right-0 bg-brand-accent text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-bl-lg shadow-sm">
+                            Deal Closed</div>
+                        <div class="flex justify-between items-center mb-4 mt-1">
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 bg-slate-100 text-slate-600 rounded">Escrow
+                                Funded</span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-base mb-1">50K Heavy Denim Jeans</h4>
+                        <p class="text-slate-500 text-xs flex items-center gap-1"><span
+                                class="w-2 h-2 rounded-full bg-brand-accent"></span> Cutting Phase</p>
+
+                        <div class="mt-6 pt-4 border-t border-emerald-50 flex justify-between items-end">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-400 font-medium uppercase">Supplier</span>
+                                <span class="text-slate-800 font-bold text-sm">TexMaker Ltd.</span>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-bold shadow-md">
+                                TM</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Create Action -->
+                    <div
+                        class="bg-white/50 backdrop-blur-sm rounded-xl p-5 border-2 border-dashed border-brand-light/30 flex flex-col items-center justify-center h-full text-center hover:bg-white hover:border-brand-primary cursor-pointer transition duration-300 group/new shadow-sm">
+                        <div
+                            class="w-14 h-14 rounded-full bg-brand-light/10 shadow-inner flex items-center justify-center text-brand-primary mb-4 group-hover/new:scale-110 group-hover/new:bg-brand-primary group-hover/new:text-white transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                        <p
+                            class="text-base font-bold text-brand-dark group-hover/new:text-brand-primary transition-colors">
+                            Create New RFQ</p>
+                        <p class="text-xs text-slate-400 mt-2 font-medium">Use Smart Templates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-32 bg-white relative">
+    <div class="absolute inset-0 bg-slate-50/50 -z-10" style="clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 100%);">
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+            <h2 class="text-sm text-brand-primary font-bold tracking-widest uppercase mb-3">End-to-End Coverage</h2>
+            <p class="text-4xl leading-tight font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                A Smarter Way to <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-light">Trade
+                    Globally</span>
+            </p>
+            <p class="mt-5 max-w-2xl text-xl text-slate-500 mx-auto font-medium">
+                Everything you need to source, negotiate, and fulfill comprehensive garment orders in one unified,
+                intelligent platform.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-brand-light/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-brand-primary to-brand-light transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">Smart RFQ Builder</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">Buyers send detailed requests including fabric
+                    type, capacity, and timelines. Request physical samples and approve them digitally on-site.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-brand-accent/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-brand-accent to-emerald-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-emerald-50 flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">Reverse Auction System</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">Verified suppliers compete by dynamically
+                    adjusting bids downwards until the auction concludes, guaranteeing you market-optimized pricing.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-green-500/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-500 to-green-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">Escrow Payment Protection</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">Trade with absolute confidence. Funds are securely
+                    locked in platform-managed escrow and only liberated upon rigorous milestone verification.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-blue-400/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-blue-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">Multi-Currency & Incoterms</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">Effortlessly calculate landed shipping costs (FOB,
+                    CIF) with our robust automated currency conversion designed specifically for international B2B
+                    commerce.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-indigo-500/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-600 to-indigo-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">Automated Contract PDF</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">A single click generates legally sound,
+                    standardized PDF contracts ready for digital signature, minimizing legal overhead and potential
+                    disputes.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div
+                class="feature-card p-8 bg-white rounded-2xl border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:border-purple-500/30 hover:-translate-y-2 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-purple-600 to-purple-400 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300">
+                </div>
+                <div
+                    class="w-14 h-14 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-3">AI-Powered Analytics</h3>
+                <p class="text-slate-600 leading-relaxed font-medium">Harness the power of AI to receive real-time
+                    pricing recommendations and track expansive order analytics via a bespoke user dashboard.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-32 bg-slate-50 relative overflow-hidden">
+    <!-- Decorative background circle -->
+    <div class="absolute -right-64 -top-64 w-[800px] h-[800px] rounded-full bg-brand-light/5 blur-3xl rounded-full">
+    </div>
+    <div class="absolute -left-64 -bottom-64 w-[600px] h-[600px] rounded-full bg-brand-accent/5 blur-3xl rounded-full">
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl font-extrabold text-brand-dark tracking-tight">The TexBid Journey</h2>
+            <p class="mt-4 text-xl text-slate-600 font-medium">An automated, frictionless pipeline from initial RFQ to
+                final delivery.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row justify-center items-stretch gap-10">
+            <!-- Buyer Flow -->
+            <div
+                class="flex-1 bg-white p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 hover:shadow-[0_20px_50px_rgb(0,0,0,0.1)] transition-all duration-500 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-bl-full rounded-tr-3xl -z-10">
+                </div>
+                <h3 class="text-3xl font-extrabold text-brand-primary mb-10 flex items-center gap-4">
+                    <span
+                        class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-light text-white flex items-center justify-center text-xl shadow-lg">B</span>
+                    For Buyers
+                </h3>
+                <div
+                    class="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-brand-light/30 before:via-brand-primary/30 before:to-transparent">
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-brand-light w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-primary">1</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Build Smart RFQ</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Leverage intelligent forms to outline
+                                exact specifications, required standards, and request physical garment samples
+                                effortlessly.</p>
+                        </div>
+                    </div>
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-brand-primary w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-primary">2</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Analyze Matrix</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Observe live reverse auctions and
+                                utilize our Bid Comparison Matrix to evaluate suppliers simultaneously on cost,
+                                capacity, and quality.</p>
+                        </div>
+                    </div>
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-brand-accent w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-accent">3</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Secure Deal Execution</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Generate automated PDF contracts,
+                                deposit securely into platform Escrow, and trace visual timelines until assured
+                                delivery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Flow -->
+            <div
+                class="flex-1 bg-white p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 hover:shadow-[0_20px_50px_rgb(0,0,0,0.1)] transition-all duration-500 relative">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-accent/5 rounded-bl-full rounded-tr-3xl -z-10">
+                </div>
+                <h3 class="text-3xl font-extrabold text-brand-accent mb-10 flex items-center gap-4">
+                    <span
+                        class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-accent to-emerald-400 text-white flex items-center justify-center text-xl shadow-lg">S</span>
+                    For Suppliers
+                </h3>
+                <div
+                    class="space-y-10 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-emerald-300/30 before:via-brand-accent/30 before:to-transparent">
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-emerald-400 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-accent">1</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Verify Profile</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Establish profound trust by uploading
+                                verified operational licenses, compliance certificates, and current factory capacity
+                                limits.</p>
+                        </div>
+                    </div>
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-brand-accent w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-accent">2</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Engage Auction & AI Pricing</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Capitalize on AI bid recommendations
+                                built upon raw material variables, and actively outmaneuver competitors in live reverse
+                                auctions.</p>
+                        </div>
+                    </div>
+                    <div class="relative flex gap-6">
+                        <div
+                            class="z-10 bg-white border-[3px] border-brand-primary w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                            <span class="font-bold text-brand-primary">3</span>
+                        </div>
+                        <div class="pt-2">
+                            <h4 class="font-bold text-xl text-slate-900 mb-2">Deliver & Automate Pay</h4>
+                            <p class="text-slate-600 font-medium leading-relaxed">Systematically update manufacturing
+                                milestones. Upon verified shipment and buyer ratification, escrow funds are
+                                instantaneously dispersed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Advanced CTA Section -->
+<section class="bg-brand-dark py-24 relative overflow-hidden text-center z-10 border-t-4 border-brand-accent">
+    <!-- Sophisticated Abstract BG -->
+    <div class="absolute inset-0 z-0">
+        <div
+            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/micro-carbon.png')] opacity-20">
+        </div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-primary/20 rounded-full blur-[100px]">
+        </div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Evolve Your Garment Supply Chain
+        </h2>
+        <p class="text-xl md:text-2xl text-slate-300 mb-12 font-medium max-w-3xl mx-auto">Join the exclusive network of
+            verified entities dominating international garment trading through TexBid's superior technology.</p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-6">
+            <button
+                class="bg-gradient-to-r from-brand-accent to-emerald-500 hover:from-emerald-500 hover:to-brand-accent text-white text-lg font-bold px-12 py-5 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(16,185,129,0.5)]">
+                Create Free Account
+            </button>
+            <button
+                class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 text-lg font-bold px-12 py-5 rounded-xl transition-all duration-300 hover:scale-105">
+                Explore Subscription Tiers
+            </button>
+        </div>
+        <p class="mt-8 text-sm text-slate-400 font-medium">No credit card required for standard access. Full module
+            availability unlocks upon profile verification.</p>
+    </div>
+</section>
+{% endblock %}
