@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Verified Suppliers - TexBid{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-slate-50 pt-10 pb-20">
+
+    <!-- Page Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold text-brand-primary uppercase tracking-widest mb-1">Supplier Network</p>
+                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Verified Manufacturers</h1>
+                <p class="mt-2 text-slate-500 max-w-xl">Browse our network of factory-verified, trust-scored garment
+                    suppliers, ready to receive your RFQs.</p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-2 shadow-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-sm font-bold text-slate-700">{{ suppliers|length }} Verified Suppliers</span>
+                </div>
+                <a href="/rfq/create"
+                    class="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:bg-brand-dark transition text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Create RFQ
+                </a>
+            </div>
+        </div>
+
+        <!-- Search + Filter Bar -->
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="supplier-search" placeholder="Search by name or specialty..."
+                    class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
+            </div>
+            <select id="mfg-filter"
+                class="border border-slate-200 rounded-xl px-4 py-2 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
+                <option value="">All Manufacturing Types</option>
+                <option value="Knit">Knit</option>
+                <option value="Woven">Woven</option>
+                <option value="Denim">Denim</option>
+                <option value="Outerwear">Outerwear</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Supplier Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {% if suppliers|length == 0 %}
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center py-24 text-center">
+            <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">No Verified Suppliers Yet</h3>
+            <p class="text-sm text-slate-500 max-w-sm">Once suppliers complete the verification process, their profiles
+                will appear here.</p>
+            <a href="/verify/supplier"
+                class="mt-6 inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-brand-dark transition">
+                Register as Supplier
+            </a>
+        </div>
+
+        {% else %}
+        <div id="supplier-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for supplier in suppliers %}
+            <!-- Supplier Card -->
+            <div class="supplier-card group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-brand-primary/40 transition-all duration-300 overflow-hidden flex flex-col"
+                data-name="{{ supplier.name | lower }}"
+                data-mfg="{{ supplier.manufacturing_type | default('') | lower }}">
+
+                <!-- Card Header Gradient Bar -->
+                <div class="h-2 bg-gradient-to-r from-brand-primary to-brand-light"></div>
+
+                <div class="p-5 flex flex-col gap-4 flex-1">
+                    <!-- Top: Avatar + Name + Status -->
+                    <div class="flex items-start gap-3">
+                        <!-- Avatar -->
+                        <div
+                            class="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center font-extrabold text-brand-primary text-lg shrink-0 border border-brand-primary/20">
+                            {{ supplier.name[0] | upper if supplier.name else '?' }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3
+                                class="font-bold text-slate-900 text-base leading-tight truncate group-hover:text-brand-primary transition">
+                                {{ supplier.name }}
+                            </h3>
+                            <!-- Trust Score Badge -->
+                            <div class="flex items-center gap-1.5 mt-1">
+                                <span
+                                    class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">
+                                    <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    Verified
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Trust Score Ring -->
+                        <div class="shrink-0 flex flex-col items-center">
+                            <div class="relative w-10 h-10">
+                                <svg class="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
+                                    <circle cx="18" cy="18" r="14" fill="none" stroke="#e2e8f0" stroke-width="3.5" />
+                                    <circle cx="18" cy="18" r="14" fill="none" stroke="#1d4ed8" stroke-width="3.5"
+                                        stroke-dasharray="{{ supplier.trust_score | default(0) }}, 100"
+                                        stroke-linecap="round" />
+                                </svg>
+                                <span
+                                    class="absolute inset-0 flex items-center justify-center text-[9px] font-extrabold text-brand-primary">{{
+                                    supplier.trust_score | default(0) }}</span>
+                            </div>
+                            <p class="text-[9px] font-semibold text-slate-400 mt-0.5 uppercase">Trust</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-3 gap-2 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                        <div class="text-center">
+                            <p class="text-xs font-extrabold text-slate-800">{{ supplier.total_workers | default('—') }}
+                            </p>
+                            <p class="text-[9px] font-medium text-slate-500 uppercase">Workers</p>
+                        </div>
+                        <div class="text-center border-x border-slate-200">
+                            <p class="text-xs font-extrabold text-slate-800">{{ supplier.total_machines | default('—')
+                                }}</p>
+                            <p class="text-[9px] font-medium text-slate-500 uppercase">Machines</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs font-extrabold text-slate-800">${{
+                                '{:,.0f}'.format(supplier.annual_turnover | default(0)) }}</p>
+                            <p class="text-[9px] font-medium text-slate-500 uppercase">Turnover</p>
+                        </div>
+                    </div>
+
+                    <!-- Manufacturing Type + Certs chips -->
+                    <div class="flex flex-wrap gap-1.5">
+                        {% if supplier.manufacturing_type %}
+                        <span
+                            class="text-[10px] font-bold bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-2.5 py-1 rounded-full">
+                            {{ supplier.manufacturing_type }}
+                        </span>
+                        {% endif %}
+                        {% if supplier.certifications %}
+                        {% for cert in supplier.certifications[:3] %}
+                        <span
+                            class="text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full">{{
+                            cert }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Footer Action -->
+                    <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <p class="text-[10px] text-slate-400">
+                            Joined {{ supplier.created_at.strftime('%b %Y') if supplier.created_at else '—' }}
+                        </p>
+                        <a href="/rfq/create"
+                            class="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:text-brand-dark transition">
+                            Send RFQ
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    // Live Search + Filter
+    const searchInput = document.getElementById('supplier-search');
+    const mfgFilter = document.getElementById('mfg-filter');
+    const cards = document.querySelectorAll('.supplier-card');
+
+    function filterCards() {
+        const query = searchInput.value.toLowerCase().trim();
+        const mfg = mfgFilter.value.toLowerCase().trim();
+
+        cards.forEach(card => {
+            const name = card.dataset.name || '';
+            const cardMfg = card.dataset.mfg || '';
+            const matchesSearch = name.includes(query);
+            const matchesMfg = !mfg || cardMfg.includes(mfg);
+            card.style.display = (matchesSearch && matchesMfg) ? '' : 'none';
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterCards);
+    if (mfgFilter) mfgFilter.addEventListener('change', filterCards);
+</script>
+{% endblock %}

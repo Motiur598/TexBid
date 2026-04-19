@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Supplier Submissions - TexBid Admin{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-slate-50 pt-10 pb-20">
+
+    <!-- Page Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold text-brand-primary uppercase tracking-widest mb-1">Admin Panel</p>
+                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">All Supplier Submissions</h1>
+                <p class="mt-2 text-slate-500">Every company that submitted a verification request via the supplier
+                    form.</p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 flex items-center gap-2 shadow-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brand-primary animate-pulse"></span>
+                    <span class="text-sm font-bold text-slate-700">{{ companies|length }} Total Records</span>
+                </div>
+                <a href="/verify/supplier"
+                    class="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-5 py-2.5 rounded-xl shadow-md hover:bg-brand-dark transition text-sm">
+                    + Add Supplier
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Status Filter -->
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input id="search-input" type="text" placeholder="Search by company name..."
+                    class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
+            </div>
+            <select id="status-filter"
+                class="border border-slate-200 rounded-xl px-4 py-2 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary">
+                <option value="">All Statuses</option>
+                <option value="DRAFT">Draft</option>
+                <option value="PENDING_REVIEW">Pending Review</option>
+                <option value="VERIFIED">Verified</option>
+                <option value="REJECTED">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if companies|length == 0 %}
+        <!-- Empty State -->
+        <div
+            class="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700 mb-1">No Submissions Found</h3>
+            <p class="text-sm text-slate-500 max-w-sm">No suppliers have submitted a verification request yet.</p>
+        </div>
+
+        {% else %}
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-sm text-left text-slate-600">
+                <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-4 font-bold">#</th>
+                        <th class="px-6 py-4 font-bold">Company Name</th>
+                        <th class="px-6 py-4 font-bold">Role</th>
+                        <th class="px-6 py-4 font-bold">Status</th>
+                        <th class="px-6 py-4 font-bold">Trust Score</th>
+                        <th class="px-6 py-4 font-bold">Submitted</th>
+                        <th class="px-6 py-4 font-bold">ID</th>
+                    </tr>
+                </thead>
+                <tbody id="company-table-body">
+                    {% for company in companies %}
+                    <tr class="company-row border-b border-slate-100 hover:bg-slate-50/80 transition"
+                        data-name="{{ company.name | lower }}" data-status="{{ company.overall_status | upper }}">
+                        <td class="px-6 py-4 text-slate-400 font-medium">{{ loop.index }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <!-- Avatar -->
+                                <div
+                                    class="w-9 h-9 shrink-0 rounded-lg bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center font-extrabold text-brand-primary text-sm">
+                                    {{ company.name[0] | upper if company.name else '?' }}
+                                </div>
+                                <a href="/suppliers/detail/{{ company.id }}"
+                                    class="font-semibold text-slate-800 hover:text-brand-primary hover:underline underline-offset-2 transition">
+                                    {{ company.name }}
+                                </a>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-block bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                                {{ company.role | default('N/A') }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% set s = company.overall_status | default('DRAFT') %}
+                            {% if s == 'VERIFIED' %}
+                            <span
+                                class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Verified
+                            </span>
+                            {% elif s == 'PENDING_REVIEW' %}
+                            <span
+                                class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Pending Review
+                            </span>
+                            {% elif s == 'REJECTED' %}
+                            <span
+                                class="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 text-xs font-bold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                Rejected
+                            </span>
+                            {% else %}
+                            <span
+                                class="inline-block bg-slate-100 text-slate-500 text-xs font-bold px-2.5 py-1 rounded-full border border-slate-200">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-1.5 bg-slate-100 rounded-full max-w-[80px]">
+                                    <div class="h-1.5 rounded-full bg-brand-primary"
+                                        style="width: {{ company.trust_score | default(0) }}%"></div>
+                                </div>
+                                <span class="font-bold text-slate-700">{{ company.trust_score | default(0) }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">
+                            {{ company.created_at.strftime('%d %b %Y') if company.created_at else '—' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-[10px] text-slate-400 truncate max-w-[100px] block"
+                                title="{{ company.id }}">
+                                {{ company.id[:12] }}…
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Summary -->
+        <p class="text-xs text-slate-400 mt-3 px-1">Showing {{ companies|length }} record(s) from the
+            <code>companies</code> collection.
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    const searchInput = document.getElementById('search-input');
+    const statusFilter = document.getElementById('status-filter');
+    const rows = document.querySelectorAll('.company-row');
+
+    function filterRows() {
+        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const status = statusFilter ? statusFilter.value.toUpperCase().trim() : '';
+
+        rows.forEach(row => {
+            const name = row.dataset.name || '';
+            const rowStatus = row.dataset.status || '';
+            const matchesName = name.includes(query);
+            const matchesStatus = !status || rowStatus === status;
+            row.style.display = (matchesName && matchesStatus) ? '' : 'none';
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterRows);
+    if (statusFilter) statusFilter.addEventListener('change', filterRows);
+</script>
+{% endblock %}

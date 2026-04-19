@@ -80,17 +80,101 @@ async def process_supplier_verification(request: Request):
         )
         certifications.append(cert.model_dump())
         
-    # MongoDB Insertion
-    if db is not None:
-        await db["companies"].insert_one(company.model_dump())
-        await db["legal_capacity"].insert_one(legal_cap.model_dump())
+    # MongoDB Insertion — re-import db to get the live connection established at startup
+    import database
+    if database.db is not None:
+        await database.db["companies"].insert_one(company.model_dump())
+        await database.db["legal_capacity"].insert_one(legal_cap.model_dump())
         if certifications:
-            await db["certifications"].insert_many(certifications)
+            await database.db["certifications"].insert_many(certifications)
         print(f"Company {company.name} saved successfully!")
+    else:
+        print("WARNING: db is None — MongoDB not connected. Data NOT saved.")
         
     return templates.TemplateResponse("supplier_verification.html", {"request": request, "success": True})
 
 
+# ----------------------------------------
+# SUPPLIER LIST (Admin View)
+# ----------------------------------------
+
+@app.get("/suppliers/list", response_class=HTMLResponse)
+async def supplier_list(request: Request):
+    """Fetches all supplier submissions from the database."""
+    import database
+    companies = []
+    if database.db is not None:
+        async for company in database.db["companies"].find({"role": "SUPPLIER"}):
+            company["_id"] = str(company["_id"])
+            companies.append(company)
+    return templates.TemplateResponse("suppliers_list.html", {"request": request, "companies": companies})
+
+@app.get("/suppliers/detail/{company_name}", response_class=HTMLResponse)
+async def supplier_detail(request: Request, company_name: str):
+    """Fetches a single supplier's full profile — company + legal capacity + certifications."""
+    import database
+
+    company = None
+    legal = None
+    certifications = []
+
+    if database.db is not None:
+        # 1. Find the company by its name
+        company = await database.db["companies"].find_one({"name": company_name})
+        
+        if company:
+            # Convert the MongoDB _id to string for the HTML template
+            company["_id"] = str(company["_id"])
+            
+            # 2. Extract the Pydantic 'id' (no underscore) to use as the foreign key
+            actual_company_id = company.get("id")
+            
+            # 3. Use actual_company_id to find the matching legal data
+            legal = await database.db["legal_capacity"].find_one({"company_id": actual_company_id})
+            if legal:
+                legal["_id"] = str(legal["_id"])
+                
+            # 4. Use actual_company_id to find matching certifications
+            async for cert in database.db["certifications"].find({"company_id": actual_company_id}):
+                cert["_id"] = str(cert["_id"])
+                certifications.append(cert)
+
+    if not company:
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse(url="/suppliers/list")
+
+    return templates.TemplateResponse("supplier_detail.html", {
+        "request": request,
+        "company": company,
+        "legal": legal,
+        "certifications": certifications
+    })
+    
+
+from fastapi import Body
+
+@app.get("/getSupplierRaw")
+async def get_supplier_raw(payload: dict = Body(...)):
+    """A GET method that reads a JSON body and returns a simple list."""
+    import database
+    
+    # Extract the name from the JSON body you type in Postman
+    company_name = payload.get("name")
+    
+    if database.db is not None:
+        # Find the exact company in the database
+        company = await database.db["companies"].find_one({"name": company_name})
+        
+        if company:
+            # Return a simple list just like the screenshot!
+            return [
+                str(company["_id"]),
+                company.get("name"),
+                company.get("role"),
+                company.get("overall_status")
+            ]
+            
+    return ["Supplier not found"]
 # ----------------------------------------
 # SMART RFQ BUILDER MODULE
 # ----------------------------------------

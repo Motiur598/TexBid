@@ -3,1272 +3,672 @@
 {% block title %}Smart RFQ Builder - TexBid{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-[#f3f6f9] py-8">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-[#f8f9fb]">
 
-        <!-- Header / Breadcrumbs -->
-        <div class="flex justify-between items-center mb-6 text-sm">
-            <div class="flex items-center gap-2 text-slate-500">
-                <a href="/dashboard/supplier" class="hover:text-slate-800 transition">Projects</a>
-                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <span class="font-bold text-slate-800">New RFQ</span>
+    <!-- TOP: Breadcrumb + Progress Bar -->
+    <div class="border-b border-[#E5E7EB] bg-white">
+        <div class="max-w-[860px] mx-auto px-4 sm:px-6 pt-6 pb-5">
+            <div class="flex justify-between items-center mb-5 text-sm">
+                <div class="flex items-center gap-2 text-slate-400">
+                    <a href="/" class="hover:text-slate-700 transition">Home</a>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <span class="font-semibold text-slate-800">New RFQ</span>
+                </div>
+                <span class="text-xs text-slate-400 hidden sm:block">Auto-saved just now</span>
             </div>
-            <div class="text-slate-400">
-                Auto-saved 2 mins ago
-            </div>
-        </div>
 
-        <!-- Stepper -->
-        <div
-            class="mb-8 flex items-center text-sm font-medium border-b border-slate-200 pb-4 overflow-x-auto whitespace-nowrap hide-scrollbar">
-            <!-- Step 1 -->
-            <div id="stepper-1"
-                class="flex items-center text-[#2563eb] gap-2 cursor-pointer transition-colors stepper-item"
-                data-step="1">
-                <svg class="w-5 h-5 step-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-                </svg>
-                1. General Info
-            </div>
-            <svg class="w-4 h-4 text-slate-300 mx-4 flex-shrink-0" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
-                </path>
-            </svg>
-
-            <!-- Step 2 -->
-            <div id="stepper-2"
-                class="flex items-center text-slate-500 gap-2 cursor-pointer transition-colors stepper-item"
-                data-step="2">
-                <svg class="w-5 h-5 step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-                2. Specifications
-            </div>
-            <svg class="w-4 h-4 text-slate-300 mx-4 flex-shrink-0" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
-                </path>
-            </svg>
-
-            <!-- Step 3 -->
-            <div id="stepper-3"
-                class="flex items-center text-slate-500 gap-2 cursor-pointer transition-colors stepper-item"
-                data-step="3">
-                <svg class="w-5 h-5 step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                    </path>
-                </svg>
-                3. Timeline
-            </div>
-            <svg class="w-4 h-4 text-slate-300 mx-4 flex-shrink-0" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
-                </path>
-            </svg>
-
-            <!-- Step 4 -->
-            <div id="stepper-4"
-                class="flex items-center text-slate-500 gap-2 cursor-pointer transition-colors stepper-item"
-                data-step="4">
-                <svg class="w-5 h-5 step-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                4. Review
+            <!-- Progress Bar -->
+            <div class="flex items-center gap-0" id="progress-bar">
+                <button type="button" class="progress-step group flex items-center gap-2 flex-1 cursor-pointer" data-step="1">
+                    <div class="step-dot w-8 h-8 rounded-full border-2 border-[#1b4478] bg-[#1b4478] text-white text-xs font-bold flex items-center justify-center transition-all shrink-0">1</div>
+                    <span class="text-xs font-semibold text-[#1b4478] hidden sm:block">Basic Details</span>
+                </button>
+                <div class="step-connector flex-1 h-[2px] bg-slate-200 mx-1 transition-colors" data-after="1"></div>
+                <button type="button" class="progress-step group flex items-center gap-2 flex-1 cursor-pointer" data-step="2">
+                    <div class="step-dot w-8 h-8 rounded-full border-2 border-slate-300 bg-white text-slate-400 text-xs font-bold flex items-center justify-center transition-all shrink-0">2</div>
+                    <span class="text-xs font-semibold text-slate-400 hidden sm:block">Specifications</span>
+                </button>
+                <div class="step-connector flex-1 h-[2px] bg-slate-200 mx-1 transition-colors" data-after="2"></div>
+                <button type="button" class="progress-step group flex items-center gap-2 flex-1 cursor-pointer" data-step="3">
+                    <div class="step-dot w-8 h-8 rounded-full border-2 border-slate-300 bg-white text-slate-400 text-xs font-bold flex items-center justify-center transition-all shrink-0">3</div>
+                    <span class="text-xs font-semibold text-slate-400 hidden sm:block">Timeline</span>
+                </button>
+                <div class="step-connector flex-1 h-[2px] bg-slate-200 mx-1 transition-colors" data-after="3"></div>
+                <button type="button" class="progress-step group flex items-center gap-2 cursor-pointer" data-step="4">
+                    <div class="step-dot w-8 h-8 rounded-full border-2 border-slate-300 bg-white text-slate-400 text-xs font-bold flex items-center justify-center transition-all shrink-0">4</div>
+                    <span class="text-xs font-semibold text-slate-400 hidden sm:block">Review</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- 2 Column Layout -->
-    <form action="/rfq/create" method="POST" class="flex flex-col lg:flex-row gap-6 items-start animate-fade-in-up">
+    <!-- FORM BODY -->
+    <form action="/rfq/create" method="POST" id="rfq-form">
+        <div class="max-w-[860px] mx-auto px-4 sm:px-6 py-8 pb-32">
 
-        <!-- Left Column: Main Form Area -->
-        <div class="w-full lg:w-[70%] relative">
-
-            <!-- STEP 1 CONTENT -->
-            <div id="step-1-content" class="space-y-6 step-content" data-step="1">
-                <!-- Top Row (Basics & Fabric Specs) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    <!-- The Basics Card -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                        <h2 class="font-bold text-slate-800 text-lg mb-5">'The Basics'</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-600 mb-1">RFQ Title</label>
-                                <input type="text" name="title"
-                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary"
-                                    placeholder="e.g. Autumn 2024 Cotton Tee Order"
-                                    value="Autumn 2024 Cotton Tee Order">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-600 mb-1">Category</label>
-                                <select name="product_category"
-                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary">
-                                    <option value="Knit">Knit</option>
-                                    <option value="Woven">Woven</option>
-                                    <option value="Denim">Denim</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-600 mb-1">Urgency Level</label>
-                                <div class="flex w-full bg-slate-100 rounded-lg p-1 border border-slate-200">
-                                    <button <button
-                                        class="urgency-btn flex-1 text-center py-1.5 text-sm font-medium text-slate-600 rounded-md hover:bg-blue-600 hover:text-white transition">Low</button>
-                                    <button
-                                        class="urgency-btn flex-1 text-center py-1.5 text-sm font-medium text-slate-600 rounded-md hover:bg-blue-600 hover:text-white transition">Medium</button>
-                                    <button
-                                        class="urgency-btn flex-1 text-center py-1.5 text-sm font-medium text-white bg-[#2563eb] rounded-md shadow-sm">High</button>
-                                </div>
-                                <input type="hidden" name="urgency_level" id="hidden_urgency" value="HIGH">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fabric Specifications Card -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                        <div class="flex justify-between items-start mb-5">
-                            <h2 class="font-bold text-slate-800 text-lg">Fabric Specifications</h2>
-                        </div>
-                        <div class="space-y-4">
-                            <p class="text-sm font-medium text-slate-800">Smart Chips</p>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-600 mb-2">Fabric Type</label>
-                                <div class="flex flex-wrap gap-2">
-                                    <button <button
-                                        class="fabric-btn px-4 py-1.5 bg-[#2563eb] text-white text-sm rounded-md shadow-sm">Cotton</button>
-                                    <button
-                                        class="fabric-btn px-4 py-1.5 bg-slate-100 text-slate-600 text-sm hover:bg-blue-600 hover:text-white hover:border-transparent transition rounded-md border border-slate-200">Polyester</button>
-                                    <button
-                                        class="fabric-btn px-4 py-1.5 bg-slate-100 text-slate-600 text-sm hover:bg-blue-600 hover:text-white hover:border-transparent transition rounded-md border border-slate-200">Linen</button>
-                                    <button
-                                        class="fabric-btn px-4 py-1.5 bg-slate-100 text-slate-600 text-sm hover:bg-blue-600 hover:text-white hover:border-transparent transition rounded-md border border-slate-200">Silk</button>
-                                </div>
-                                <input type="hidden" name="fabric_type" id="hidden_fabric" value="Cotton">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-600 mb-2">GSM (Fabric Weight)</label>
-                                <select name="gsm_range" id="gsm-select"
-                                    class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] bg-white">
-                                    <option value="" disabled selected>Select Fabric Weight</option>
-                                    <option value="120-150">120 - 150 GSM (Lightweight — Best for summer tees,
-                                        activewear...)</option>
-                                    <option value="160-190">160 - 190 GSM (Standard Weight — The industry standard...)
-                                    </option>
-                                    <option value="200-240">200 - 240 GSM (Heavyweight — Premium, thick t-shirts...)
-                                    </option>
-                                    <option value="250-350">250 - 350 GSM (Fleece & Outerwear — Hoodies, sweatshirts...)
-                                    </option>
-                                    <option value="350+">350+ GSM (Heavy Outerwear — Heavy hoodies, denim...)</option>
-                                    <option value="Custom">Custom GSM</option>
-                                </select>
-                                <div id="gsm-custom-input-wrapper" class="hidden mt-3">
-                                    <label class="block text-xs font-medium text-slate-500 mb-1">Enter Custom
-                                        GSM</label>
-                                    <input type="number" name="custom_gsm" placeholder="e.g., 175"
-                                        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- STEP 1: Basic Details -->
+            <div class="step-panel active" data-step="1" id="panel-1">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Basic Details</h2>
+                    <p class="text-sm text-slate-500 mt-1">Tell us about your order — product type, quantities, and urgency.</p>
                 </div>
+                <div class="space-y-5">
+                    <!-- RFQ Title -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">RFQ Title <span class="text-red-400">*</span></label>
+                        <input type="text" name="title" id="inp-title" required
+                            class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition"
+                            placeholder="e.g. Autumn 2024 Cotton Tee Order">
+                    </div>
 
-                <!-- Middle Row (Quantities & Compliance) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Category + Urgency -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Product Category <span class="text-red-400">*</span></label>
+                            <select name="product_category" required
+                                class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                                <option value="" disabled selected>Select category</option>
+                                <option value="Knit">Knit</option>
+                                <option value="Woven">Woven</option>
+                                <option value="Denim">Denim</option>
+                                <option value="Outerwear">Outerwear</option>
+                                <option value="Activewear">Activewear</option>
+                            </select>
+                        </div>
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Urgency Level</label>
+                            <div class="flex gap-2">
+                                <button type="button" class="urgency-btn flex-1 py-2 text-sm font-semibold rounded-lg border transition border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100" data-value="LOW">Low</button>
+                                <button type="button" class="urgency-btn flex-1 py-2 text-sm font-semibold rounded-lg border transition border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100" data-value="MEDIUM">Medium</button>
+                                <button type="button" class="urgency-btn flex-1 py-2 text-sm font-semibold rounded-lg border transition border-red-200 bg-red-50 text-red-600 hover:bg-red-100 ring-2 ring-red-300" data-value="HIGH">High</button>
+                            </div>
+                            <input type="hidden" name="urgency_level" id="hidden_urgency" value="HIGH">
+                        </div>
+                    </div>
 
-                    <!-- Quantity & Size Breakup -->
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                        <h2 class="font-bold text-slate-800 text-lg mb-5">Quantity & Size Breakup</h2>
+                    <!-- Quantity Breakdown -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold text-slate-700">Quantity Breakdown <span class="text-red-400">*</span></h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Add size, color, and quantity rows for your order</p>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800">Total: <span id="total-qty" class="text-lg text-[#1b4478]">0</span></span>
+                        </div>
                         <div class="overflow-hidden rounded-lg border border-slate-200">
                             <table class="min-w-full divide-y divide-slate-200 text-sm">
                                 <thead class="bg-slate-50">
                                     <tr>
-                                        <th class="px-4 py-3 text-left font-medium text-slate-600">Size</th>
-                                        <th
-                                            class="px-4 py-3 text-left font-medium text-slate-600 border-l border-slate-200">
-                                            Color</th>
-                                        <th
-                                            class="px-4 py-3 text-left font-medium text-slate-600 border-l border-slate-200">
-                                            Quantity</th>
+                                        <th class="px-4 py-2.5 text-left font-semibold text-slate-600 w-[30%]">Size</th>
+                                        <th class="px-4 py-2.5 text-left font-semibold text-slate-600 border-l border-slate-200 w-[30%]">Color</th>
+                                        <th class="px-4 py-2.5 text-left font-semibold text-slate-600 border-l border-slate-200">Quantity</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-slate-200 text-slate-700" id="size-table-body">
-                                    <!-- Dynamic rows injected here -->
-                                </tbody>
+                                <tbody class="bg-white divide-y divide-slate-100" id="size-table-body"></tbody>
                             </table>
                         </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <button type="button" id="add-row-btn"
-                                class="text-[#2563eb] font-bold text-sm flex items-center gap-1 hover:text-blue-800"><svg
-                                    class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg> Add Row</button>
-                            <span class="text-slate-900 text-sm font-bold">Total Quantity: <span id="total-qty"
-                                    class="text-xl ml-1">0</span></span>
-                        </div>
+                        <button type="button" id="add-row-btn"
+                            class="mt-3 text-[#1b4478] font-semibold text-sm flex items-center gap-1.5 hover:text-[#143560] transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Add Row
+                        </button>
                         <input type="hidden" id="hidden_total_qty" name="total_quantity" value="0">
                     </div>
-
-                    <!-- Compliance & Quality -->
-                    <div
-                        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
-                        <div>
-                            <h2 class="font-bold text-slate-800 text-lg mb-5">Compliance & Quality</h2>
-                            <div class="space-y-4 mb-8">
-                                <label class="flex items-center gap-3 cursor-pointer group">
-                                    <input type="checkbox" name="compliance[]" value="OEKO-TEX" class="hidden peer">
-                                    <div
-                                        class="w-5 h-5 rounded bg-[#2563eb] text-white flex items-center justify-center flex-shrink-0 peer-checked:bg-[#2563eb] peer-checked:border-transparent border border-slate-300 transition-colors group-hover:bg-[#2563eb] group-hover:border-transparent group-hover:bg-opacity-80">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-medium text-slate-700">OEKO-TEX</span>
-                                </label>
-                                <label class="flex items-center gap-3 cursor-pointer group">
-                                    <input type="checkbox" name="compliance[]" value="GOTS" class="hidden peer">
-                                    <div
-                                        class="w-5 h-5 rounded bg-[#2563eb] text-white flex items-center justify-center flex-shrink-0 peer-checked:bg-[#2563eb] peer-checked:border-transparent border border-slate-300 transition-colors group-hover:bg-[#2563eb] group-hover:border-transparent group-hover:bg-opacity-80">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-medium text-slate-700">GOTS</span>
-                                </label>
-                                <label class="flex items-center gap-3 cursor-pointer group">
-                                    <input type="checkbox" name="compliance[]" value="REACH" class="hidden peer">
-                                    <div
-                                        class="w-5 h-5 rounded bg-[#2563eb] text-white flex items-center justify-center flex-shrink-0 peer-checked:bg-[#2563eb] peer-checked:border-transparent border border-slate-300 transition-colors group-hover:bg-[#2563eb] group-hover:border-transparent group-hover:bg-opacity-80">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-medium text-slate-700">REACH</span>
-                                </label>
-                            </div>
-                        </div>
-                        <button
-                            class="w-full bg-[#1b4478] text-white font-medium py-3 rounded-lg text-sm shadow-sm hover:bg-blue-800 transition mt-auto">Upload
-                            Tech Pack</button>
-                    </div>
                 </div>
+            </div>
 
-                <!-- Bottom Row: Design Gallery -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 lg:p-8">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Design & Inspiration Gallery</h2>
-
-                    <!-- Drag and drop zone -->
-                    <div
-                        class="border-2 border-dashed border-slate-300 rounded-xl p-10 flex flex-col items-center justify-center text-center bg-slate-50 mb-6 cursor-pointer hover:bg-slate-100 transition">
-                        <div
-                            class="w-14 h-14 bg-[#2563eb] rounded-full flex items-center justify-center text-white mb-4 shadow-sm">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                            </svg>
-                        </div>
-                        <p class="text-slate-800 font-medium whitespace-pre-line">Drop your sketches, 3D renders, or
-                            inspiration photos here
-                            <span class="text-sm font-normal text-slate-500">(PDF, AI, PNG, JPG supported).</span>
-                        </p>
-                    </div>
-
-                    <!-- Thumbnails -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <!-- Thumb 1 -->
-                        <div
-                            class="group relative bg-slate-100 rounded-xl overflow-hidden aspect-square border border-slate-200 flex flex-col items-center justify-center">
-                            <svg class="w-16 h-16 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5">
-                                <path d="M20 9v11a2 2 0 01-2 2H6a2 2 0 01-2-2V9" />
-                                <path d="M9 22V12h6v10m-1.5-13V2l3-2h-9l3 2v7.5" />
-                            </svg>
-                            <span class="absolute bottom-2 left-3 text-xs font-medium text-slate-700">Front View
-                                Sketch</span>
-                            <div class="absolute bottom-2 right-2 flex gap-1 opacity-100">
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-[#2563eb] hover:bg-blue-50 transition"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg></button>
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-red-500"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg></button>
-                            </div>
-                        </div>
-                        <!-- Thumb 2 -->
-                        <div
-                            class="group relative bg-slate-200 rounded-xl overflow-hidden aspect-square border border-slate-200">
-                            <!-- Using a placeholder gradient to represent the shirt asset -->
-                            <div class="w-full h-full bg-gradient-to-br from-slate-200 to-slate-400"></div>
-                            <span
-                                class="absolute bottom-2 left-3 text-xs font-medium text-white shadow-sm drop-shadow-md">3D
-                                Product Render</span>
-                            <div class="absolute bottom-2 right-2 flex gap-1 opacity-100">
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-[#2563eb] hover:bg-blue-50 transition"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg></button>
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-red-500"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg></button>
-                            </div>
-                        </div>
-                        <!-- Thumb 3 -->
-                        <div
-                            class="group relative bg-[#e3e3e3] rounded-xl overflow-hidden aspect-square border border-slate-200">
-                            <div
-                                class="w-full h-full bg-[#eaeaea] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiLz4KPC9zdmc+')] opacity-50 mix-blend-multiply">
-                            </div>
-                            <span
-                                class="absolute bottom-2 left-3 text-xs font-medium text-slate-700 bg-white/70 px-1 rounded">Fabric
-                                Detail & Texture</span>
-                            <div class="absolute bottom-2 right-2 flex gap-1 opacity-100">
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-[#2563eb] hover:bg-blue-50 transition"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg></button>
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-red-500"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg></button>
-                            </div>
-                        </div>
-                        <!-- Thumb 4 -->
-                        <div
-                            class="group relative bg-[#9b7e56] rounded-xl overflow-hidden aspect-square border border-slate-200">
-                            <div class="w-full h-full bg-gradient-to-t from-[#2c4059] to-[#c29c69]"></div>
-                            <span
-                                class="absolute bottom-2 left-3 text-xs font-medium text-white drop-shadow-md">Inspiration/Moodboard</span>
-                            <div class="absolute bottom-2 right-2 flex gap-1 opacity-100">
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-[#2563eb] hover:bg-blue-50 transition"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg></button>
-                                <button
-                                    class="w-7 h-7 bg-white rounded-md shadow flex items-center justify-center text-slate-500 hover:text-red-500"><svg
-                                        class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                        </path>
-                                    </svg></button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- STEP 2: Product Specifications & AI -->
+            <div class="step-panel" data-step="2" id="panel-2">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Product Specifications</h2>
+                    <p class="text-sm text-slate-500 mt-1">Define fabric, certifications, trims, and use AI tools for color matching.</p>
                 </div>
-            </div> <!-- End Step 1 Strategy Content -->
-
-            <!-- STEP 2 CONTENT (Specifications) -->
-            <div id="step-2-content" class="space-y-6 step-content hidden animate-fade-in-up" data-step="2">
-
-                <!-- Bill of Materials (BOM) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Bill of Materials (BOM)</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Buttons & Snaps</label>
-                            <input type="text" name="bom_buttons"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
-                                placeholder="e.g. 4-hole resin, 18L">
+                <div class="space-y-5">
+                    <!-- Fabric & GSM -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">Fabric Type</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" class="fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-[#1b4478] bg-[#1b4478] text-white" data-value="Cotton">Cotton</button>
+                                <button type="button" class="fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1b4478] hover:text-[#1b4478]" data-value="Polyester">Polyester</button>
+                                <button type="button" class="fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1b4478] hover:text-[#1b4478]" data-value="Linen">Linen</button>
+                                <button type="button" class="fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1b4478] hover:text-[#1b4478]" data-value="Silk">Silk</button>
+                                <button type="button" class="fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1b4478] hover:text-[#1b4478]" data-value="Blend">Blend</button>
+                            </div>
+                            <input type="hidden" name="fabric_type" id="hidden_fabric" value="Cotton">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Zippers & Hardware</label>
-                            <input type="text" name="bom_zippers"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
-                                placeholder="e.g. YKK Nylon #5">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Thread Quality</label>
-                            <input type="text" name="bom_thread"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
-                                placeholder="e.g. Spun Polyester 40s/2">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Labeling & Packaging -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Labeling & Packaging</h2>
-
-                    <div class="space-y-6">
-                        <!-- Labeling Options -->
-                        <div>
-                            <p class="text-sm font-bold text-slate-700 mb-3">Label Requirements</p>
-                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="labeling_reqs[]" value="Custom Neck Label"
-                                        class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors group-hover:border-[#2563eb]">
-                                    <span class="text-sm text-slate-600">Custom Neck Label</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="labeling_reqs[]" value="Woven Care Tag"
-                                        class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors group-hover:border-[#2563eb]">
-                                    <span class="text-sm text-slate-600">Woven Care Tag</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="labeling_reqs[]" value="Hangtag"
-                                        class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors group-hover:border-[#2563eb]">
-                                    <span class="text-sm text-slate-600">Hangtag</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" name="labeling_reqs[]" value="RFID Sticker"
-                                        class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors group-hover:border-[#2563eb]">
-                                    <span class="text-sm text-slate-600">RFID Sticker</span>
-                                </label>
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">GSM (Fabric Weight)</label>
+                            <select name="gsm_range" id="gsm-select"
+                                class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                                <option value="" disabled selected>Select Fabric Weight</option>
+                                <option value="120-150">120–150 GSM (Lightweight)</option>
+                                <option value="160-190">160–190 GSM (Standard)</option>
+                                <option value="200-240">200–240 GSM (Heavyweight)</option>
+                                <option value="250-350">250–350 GSM (Fleece)</option>
+                                <option value="350+">350+ GSM (Heavy Outerwear)</option>
+                                <option value="Custom">Custom GSM</option>
+                            </select>
+                            <div id="gsm-custom-input-wrapper" class="hidden mt-3">
+                                <input type="number" name="custom_gsm" placeholder="e.g. 175"
+                                    class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                             </div>
                         </div>
+                    </div>
 
-                        <hr class="border-slate-100">
+                    <!-- Certifications -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <label class="block text-sm font-semibold text-slate-700 mb-3">Certifications Required</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <label class="flex items-center gap-2.5 cursor-pointer group">
+                                <input type="checkbox" name="compliance[]" value="ISO_9001" class="appearance-none w-[18px] h-[18px] rounded border-2 border-slate-300 checked:bg-[#1b4478] checked:border-[#1b4478] transition cursor-pointer bg-[length:12px] bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTNsNCA0TDE5IDciLz48L3N2Zz4=')]">
+                                <span class="text-sm text-slate-600 group-hover:text-slate-800">ISO 9001</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer group">
+                                <input type="checkbox" name="compliance[]" value="WRAP" class="appearance-none w-[18px] h-[18px] rounded border-2 border-slate-300 checked:bg-[#1b4478] checked:border-[#1b4478] transition cursor-pointer bg-[length:12px] bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTNsNCA0TDE5IDciLz48L3N2Zz4=')]">
+                                <span class="text-sm text-slate-600 group-hover:text-slate-800">WRAP</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer group">
+                                <input type="checkbox" name="compliance[]" value="OEKO_TEX" class="appearance-none w-[18px] h-[18px] rounded border-2 border-slate-300 checked:bg-[#1b4478] checked:border-[#1b4478] transition cursor-pointer bg-[length:12px] bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTNsNCA0TDE5IDciLz48L3N2Zz4=')]">
+                                <span class="text-sm text-slate-600 group-hover:text-slate-800">OEKO-TEX</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 cursor-pointer group">
+                                <input type="checkbox" name="compliance[]" value="BSCI" class="appearance-none w-[18px] h-[18px] rounded border-2 border-slate-300 checked:bg-[#1b4478] checked:border-[#1b4478] transition cursor-pointer bg-[length:12px] bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTNsNCA0TDE5IDciLz48L3N2Zz4=')]">
+                                <span class="text-sm text-slate-600 group-hover:text-slate-800">BSCI</span>
+                            </label>
+                        </div>
+                    </div>
 
-                        <!-- Packaging Type -->
-                        <div>
-                            <p class="text-sm font-bold text-slate-700 mb-3">Packaging Type</p>
-                            <div class="flex gap-4">
-                                <label class="flex items-center gap-2 cursor-pointer group">
-                                    <input type="radio" name="packaging_type" value="Individual Polybag"
-                                        class="appearance-none w-5 h-5 rounded-full border border-slate-300 checked:border-4 checked:border-[#2563eb] transition-all group-hover:border-[#2563eb]"
-                                        checked>
+                    <!-- Bill of Materials -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <label class="block text-sm font-semibold text-slate-700 mb-3">Bill of Materials (BOM)</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Buttons & Snaps</label>
+                                <input type="text" name="bom_buttons" placeholder="e.g. 4-hole resin, 18L"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Zippers & Hardware</label>
+                                <input type="text" name="bom_zippers" placeholder="e.g. YKK Nylon #5"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Thread Quality</label>
+                                <input type="text" name="bom_thread" placeholder="e.g. Spun Poly 40s/2"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Color Match Tool -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-7 h-7 rounded-lg bg-[#1b4478]/10 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-[#1b4478]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                            </div>
+                            <h3 class="text-sm font-semibold text-slate-700">AI Color Match Tool</h3>
+                        </div>
+                        <div id="color-drop-zone" class="drop-zone border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-slate-50 transition mb-4">
+                            <svg class="w-10 h-10 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <p class="text-sm font-medium text-slate-600">Drop your inspiration image here</p>
+                            <p class="text-xs text-slate-400 mt-1">PNG, JPG supported — we'll extract Pantone swatches</p>
+                        </div>
+                        <input type="file" id="ai-color-extraction-input" accept="image/*" class="hidden">
+                        <div id="visual-specs-palette"></div>
+                        <div id="color-skeleton" class="hidden space-y-3">
+                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full animate-shimmer"></div><div class="flex-1 h-4 rounded animate-shimmer"></div></div>
+                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full animate-shimmer"></div><div class="flex-1 h-4 rounded animate-shimmer"></div></div>
+                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full animate-shimmer"></div><div class="flex-1 h-4 rounded animate-shimmer"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Packaging & Tolerance -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">Packaging Type</label>
+                            <div class="flex gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="packaging_type" value="Individual Polybag" checked
+                                        class="appearance-none w-[18px] h-[18px] rounded-full border-2 border-slate-300 checked:border-[6px] checked:border-[#1b4478] transition cursor-pointer">
                                     <span class="text-sm text-slate-600">Individual Polybag</span>
                                 </label>
-                                <label class="flex items-center gap-2 cursor-pointer group">
+                                <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="radio" name="packaging_type" value="Bulk in Carton"
-                                        class="appearance-none w-5 h-5 rounded-full border border-slate-300 checked:border-4 checked:border-[#2563eb] transition-all group-hover:border-[#2563eb]">
+                                        class="appearance-none w-[18px] h-[18px] rounded-full border-2 border-slate-300 checked:border-[6px] checked:border-[#1b4478] transition cursor-pointer">
                                     <span class="text-sm text-slate-600">Bulk in Carton</span>
                                 </label>
                             </div>
                         </div>
+                        <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Measurement Tolerance</label>
+                            <input type="text" name="measurement_tolerance" placeholder="e.g. +/- 0.5 inches on Chest"
+                                class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Measurement Tolerances -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Measurement Tolerances</h2>
-                    <p class="text-sm text-slate-500 mb-3">Define the acceptable margin of error in sizing to ensure QA
-                        consistency.</p>
-                    <input type="text" name="measurement_tolerance"
-                        class="w-full lg:w-1/2 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
-                        placeholder="e.g. +/- 0.5 inches on Chest, +/- 0.25 on Length">
+            <!-- STEP 3: Timeline & Logistics -->
+            <div class="step-panel" data-step="3" id="panel-3">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Timeline & Logistics</h2>
+                    <p class="text-sm text-slate-500 mt-1">Set delivery targets, sample requirements, and shipping preferences.</p>
                 </div>
+                <div class="space-y-5">
+                    <!-- Delivery Date -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Target Delivery Date <span class="text-red-400">*</span></label>
+                        <p class="text-xs text-slate-400 mb-3">When do the final goods need to arrive at your warehouse?</p>
+                        <input type="date" name="target_delivery_date"
+                            class="w-full md:w-1/2 border border-slate-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                    </div>
 
-            </div> <!-- End Step 2 -->
+                    <!-- Sample Requirements -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5 space-y-4">
+                        <label class="block text-sm font-semibold text-slate-700">Sample Requirements</label>
+                        <!-- Proto Sample -->
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div>
+                                <p class="text-sm font-medium text-slate-700">Proto Sample Required</p>
+                                <p class="text-xs text-slate-400">First development sample before production</p>
+                            </div>
+                            <div class="toggle-switch" id="toggle-proto" data-target="proto-date-wrapper"></div>
+                            <input type="hidden" name="proto_sample_req" id="proto-sample-val" value="false">
+                        </div>
+                        <div id="proto-date-wrapper" class="hidden pl-4">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Target Proto Approval Date</label>
+                            <input type="date" name="proto_sample_date"
+                                class="w-full md:w-1/2 border border-slate-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                        </div>
+                        <!-- PP Sample -->
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div>
+                                <p class="text-sm font-medium text-slate-700">Pre-Production (PP) Sample</p>
+                                <p class="text-xs text-slate-400">Final approval sample before bulk production</p>
+                            </div>
+                            <div class="toggle-switch active" id="toggle-pp" data-target="pp-date-wrapper"></div>
+                            <input type="hidden" name="pp_sample_req" id="pp-sample-val" value="true">
+                        </div>
+                        <div id="pp-date-wrapper" class="pl-4">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Target PP Approval Date</label>
+                            <input type="date" name="pp_sample_date"
+                                class="w-full md:w-1/2 border border-slate-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                        </div>
+                    </div>
 
-            <!-- STEP 3 CONTENT (Timeline & Logistics) -->
-            <div id="step-3-content" class="space-y-6 step-content hidden animate-fade-in-up" data-step="3">
-
-                <!-- Delivery Dates -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Target Dates & Sampling</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                        <!-- Master Target Delivery -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Final Target Delivery
-                                In-Warehouse</label>
-                            <p class="text-xs text-slate-500 mb-3">When do the goods need to arrive at your final
-                                destination?</p>
-                            <div class="relative max-w-sm">
-                                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                                    <svg class="w-4 h-4 text-slate-500" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                    </svg>
-                                </div>
-                                <input type="date" name="target_delivery_date"
-                                    class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-[#2563eb] focus:border-[#2563eb] block w-full ps-10 p-2.5 shadow-sm"
-                                    placeholder="Select date">
+                    <!-- Shipping & Incoterms -->
+                    <div class="bg-white rounded-xl border border-[#E5E7EB] p-5">
+                        <label class="block text-sm font-semibold text-slate-700 mb-3">Shipping & Incoterms</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Trade Terms</label>
+                                <select name="incoterm"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                                    <option value="FOB">FOB (Free on Board)</option>
+                                    <option value="CIF">CIF (Cost, Insurance, Freight)</option>
+                                    <option value="EXW">EXW (Ex Works)</option>
+                                    <option value="DDP">DDP (Delivered Duty Paid)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Shipping Method</label>
+                                <select name="shipping_method" id="shipping-method-select"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
+                                    <option value="Sea Freight">Sea Freight</option>
+                                    <option value="Air Freight">Air Freight</option>
+                                    <option value="Land/Rail">Land / Rail</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Destination Port / City</label>
+                                <input type="text" name="destination_port" placeholder="e.g. Port of Los Angeles"
+                                    class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                             </div>
                         </div>
-
-                        <!-- Sampling Deadlines -->
-                        <div class="space-y-4">
-                            <!-- Proto Sample -->
-                            <div
-                                class="border border-slate-200 rounded-lg p-3 group hover:border-[#2563eb] transition-colors">
-                                <div class="flex items-center justify-between">
-                                    <label class="flex items-center gap-2 cursor-pointer cursor-pointer">
-                                        <input type="checkbox" name="proto_sample_req" value="true"
-                                            class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors sample-toggle"
-                                            data-target="proto-date-wrapper">
-                                        <span class="text-sm font-bold text-slate-700">Require Proto Sample</span>
-                                    </label>
-                                </div>
-                                <div id="proto-date-wrapper" class="hidden mt-3 pl-7">
-                                    <label class="block text-xs text-slate-500 mb-1">Target Proto Approval Date</label>
-                                    <input type="date" name="proto_sample_date"
-                                        class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-[#2563eb] focus:border-[#2563eb] block w-full p-2">
-                                </div>
-                            </div>
-
-                            <!-- PP Sample -->
-                            <div
-                                class="border border-slate-200 rounded-lg p-3 group hover:border-[#2563eb] transition-colors">
-                                <div class="flex items-center justify-between">
-                                    <label class="flex items-center gap-2 cursor-pointer cursor-pointer">
-                                        <input type="checkbox" name="pp_sample_req" value="true"
-                                            class="appearance-none w-5 h-5 rounded border border-slate-300 checked:bg-[#2563eb] checked:border-transparent transition-colors sample-toggle"
-                                            data-target="pp-date-wrapper" checked>
-                                        <span class="text-sm font-bold text-slate-700">Require Pre-Production (PP)
-                                            Sample</span>
-                                    </label>
-                                </div>
-                                <div id="pp-date-wrapper" class="mt-3 pl-7">
-                                    <label class="block text-xs text-slate-500 mb-1">Target PP Approval Date</label>
-                                    <input type="date" name="pp_sample_date"
-                                        class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-[#2563eb] focus:border-[#2563eb] block w-full p-2">
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+            </div>
 
-                <!-- Shipping & Incoterms -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 relative">
-                    <h2 class="font-bold text-slate-800 text-lg mb-5">Shipping & Incoterms</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Trade Terms</label>
-                            <select name="incoterm"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] bg-white">
-                                <option value="FOB">FOB (Free on Board)</option>
-                                <option value="CIF">CIF (Cost, Insurance, Freight)</option>
-                                <option value="DDP">DDP (Delivered Duty Paid)</option>
-                                <option value="EXW">EXW (Ex Works)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Primary Shipping Method</label>
-                            <select id="shipping-method-select" name="shipping_method"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] bg-white">
-                                <option value="Sea Freight">Sea Freight</option>
-                                <option value="Air Freight">Air Freight</option>
-                                <option value="Land/Rail">Land/Rail</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-slate-600 mb-1">Destination Port/City</label>
-                            <input type="text" name="destination_port"
-                                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]"
-                                placeholder="e.g. Port of Los Angeles">
-                        </div>
-
-                    </div>
+            <!-- STEP 4: Review & Submit -->
+            <div class="step-panel" data-step="4" id="panel-4">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Review & Submit</h2>
+                    <p class="text-sm text-slate-500 mt-1">Confirm your RFQ details before publishing to verified suppliers.</p>
                 </div>
-
-            </div> <!-- End Step 3 -->
-
-            <!-- STEP 4 CONTENT (Review & Submit) -->
-            <div id="step-4-content" class="space-y-6 step-content hidden animate-fade-in-up" data-step="4">
-
-                <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 text-center mb-6">
-                    <div
-                        class="w-16 h-16 bg-[#2563eb] rounded-full flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-blue-500/30">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Ready to Publish?</h2>
-                    <p class="text-slate-600 max-w-lg mx-auto">Please review your RFQ details below. Once published,
-                        your specifications will be broadcasted to our network of verified manufacturing partners.</p>
-                </div>
-
-                <!-- Review Accordions -->
-                <div
-                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden divide-y divide-slate-100">
-
-                    <!-- Product Basics Summary -->
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                                <svg class="w-5 h-5 text-[#2563eb]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                                Product Basics
+                <div class="bg-white rounded-xl border border-[#E5E7EB] overflow-hidden divide-y divide-slate-100">
+                    <!-- Product Info -->
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded bg-[#1b4478]/10 text-[#1b4478] flex items-center justify-center text-xs font-bold">1</span>
+                                Product Info
                             </h3>
-                            <button type="button" onclick="goToStep(1)"
-                                class="text-sm font-medium text-[#2563eb] hover:text-blue-800 flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                    </path>
-                                </svg> Edit
-                            </button>
+                            <button type="button" onclick="goToStep(1)" class="text-xs font-semibold text-[#1b4478] hover:underline">Edit</button>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                            <div>
-                                <p class="text-slate-500 mb-1">Title</p>
-                                <p class="font-semibold text-slate-800" id="summary-title">Autumn 2024 Cotton Tee
-                                    Order</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-500 mb-1">Category</p>
-                                <p class="font-semibold text-slate-800" id="summary-category">Knit</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-500 mb-1">Fabric</p>
-                                <p class="font-semibold text-slate-800" id="summary-fabric">Cotton</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-500 mb-1">Total Qty</p>
-                                <p class="font-semibold text-slate-800" id="summary-qty">3,000 units</p>
-                            </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                            <div><p class="text-slate-400 text-xs mb-0.5">Title</p><p class="font-semibold text-slate-800" id="summary-title">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Category</p><p class="font-semibold text-slate-800" id="summary-category">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Fabric</p><p class="font-semibold text-slate-800" id="summary-fabric">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Total Quantity</p><p class="font-semibold text-slate-800" id="summary-qty">—</p></div>
                         </div>
                     </div>
-
-                    <!-- Technical Specs Summary -->
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                                <svg class="w-5 h-5 text-[#2563eb]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                    </path>
-                                </svg>
-                                Technical Specs
+                    <!-- Specifications -->
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded bg-[#1b4478]/10 text-[#1b4478] flex items-center justify-center text-xs font-bold">2</span>
+                                Specifications
                             </h3>
-                            <button type="button" onclick="goToStep(2)"
-                                class="text-sm font-medium text-[#2563eb] hover:text-blue-800 flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                    </path>
-                                </svg> Edit
-                            </button>
+                            <button type="button" onclick="goToStep(2)" class="text-xs font-semibold text-[#1b4478] hover:underline">Edit</button>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-4 text-sm flex gap-6">
-                            <div class="w-1/2">
-                                <p class="text-slate-500 mb-2">Selected Tolerances:</p>
-                                <p class="font-semibold text-slate-800 border-l-2 border-[#2563eb] pl-3">Standard
-                                    Tolerances Selected. Custom Labels required. Polybag packaging.</p>
-                            </div>
-                            <div class="w-1/2">
-                                <p class="text-slate-500 mb-2">Visual Assets:</p>
-                                <div class="flex gap-2">
-                                    <div class="w-10 h-10 rounded bg-slate-200 border border-slate-300"></div>
-                                    <div class="w-10 h-10 rounded bg-slate-200 border border-slate-300"></div>
-                                    <span class="text-xs text-slate-500 self-center">+2 more</span>
-                                </div>
-                            </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                            <div><p class="text-slate-400 text-xs mb-0.5">Certifications</p><p class="font-semibold text-slate-800" id="summary-certs">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Packaging</p><p class="font-semibold text-slate-800" id="summary-packaging">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">GSM</p><p class="font-semibold text-slate-800" id="summary-gsm">—</p></div>
                         </div>
                     </div>
-
-                    <!-- Logistics Summary -->
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                                <svg class="w-5 h-5 text-[#2563eb]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
+                    <!-- Timeline -->
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded bg-[#1b4478]/10 text-[#1b4478] flex items-center justify-center text-xs font-bold">3</span>
                                 Timeline & Logistics
                             </h3>
-                            <button type="button" onclick="goToStep(3)"
-                                class="text-sm font-medium text-[#2563eb] hover:text-blue-800 flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                    </path>
-                                </svg> Edit
-                            </button>
+                            <button type="button" onclick="goToStep(3)" class="text-xs font-semibold text-[#1b4478] hover:underline">Edit</button>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-4 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                            <div>
-                                <p class="text-slate-500 mb-1">Target Delivery</p>
-                                <p class="font-semibold text-slate-800" id="summary-delivery">To be finalized</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-500 mb-1">Shipping Method</p>
-                                <p class="font-semibold text-slate-800" id="summary-shipping">Sea Freight</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-500 mb-1">Trade Term</p>
-                                <p class="font-semibold text-slate-800" id="summary-incoterm">FOB</p>
-                            </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                            <div><p class="text-slate-400 text-xs mb-0.5">Target Delivery</p><p class="font-semibold text-slate-800" id="summary-delivery">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Shipping</p><p class="font-semibold text-slate-800" id="summary-shipping">—</p></div>
+                            <div><p class="text-slate-400 text-xs mb-0.5">Trade Term</p><p class="font-semibold text-slate-800" id="summary-incoterm">—</p></div>
                         </div>
                     </div>
-
                 </div>
-
-            </div> <!-- End Step 4 -->
-
-        </div>
-
-        <!-- Right Column: Smart Summary Sidebar -->
-        <div
-            class="w-full lg:w-[30%] space-y-4 lg:sticky top-[100px] h-auto lg:h-[calc(100vh-120px)] lg:overflow-y-auto pb-8 custom-scrollbar">
-            <div class="flex items-center justify-between mb-2 px-2">
-                <h2 class="font-bold text-slate-800 text-lg">Smart Summary</h2>
-            </div>
-
-            <!-- Completeness Score Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center group"
-                id="score-card">
-                <h3 class="font-bold text-slate-800 text-sm w-full mb-6">RFQ Completeness Score</h3>
-                <!-- SVG Donut Chart for 85% -->
-                <div class="relative w-36 h-36 mb-6">
-                    <svg class="w-full h-full transform -rotate-90 donut-svg" viewBox="0 0 36 36">
-                        <!-- Background Circle -->
-                        <path class="text-slate-100" stroke-width="3" stroke="currentColor" fill="none"
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <!-- Progress Circle -->
-                        <path
-                            class="text-[#2563eb] donut-progress transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(37,99,235,0)] group-[.score-100]:drop-shadow-[0_0_8px_rgba(37,99,235,0.6)]"
-                            stroke-width="3" stroke-dasharray="20, 100" stroke-linecap="round" stroke="currentColor"
-                            fill="none"
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="text-3xl font-extrabold text-[#2563eb] donut-text">20%</span>
-                    </div>
+                <!-- Action buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                    <button type="button" id="btn-save-draft"
+                        class="flex-1 py-3 px-6 rounded-lg text-sm font-bold border-2 border-[#1b4478] text-[#1b4478] bg-white hover:bg-[#1b4478]/5 transition text-center">
+                        Save as Draft
+                    </button>
+                    <button type="submit" id="btn-submit-rfq"
+                        class="flex-1 py-3 px-6 rounded-lg text-sm font-bold bg-[#1b4478] text-white hover:bg-[#143560] shadow-lg shadow-[#1b4478]/20 transition text-center">
+                        Submit RFQ →
+                    </button>
                 </div>
-                <div class="w-full pt-4 border-t border-slate-100">
-                    <p class="text-sm text-slate-600 text-center completeness-detail"><span
-                            class="font-bold text-slate-800">Completeness: Poor -</span><br />Please fill required
-                        fields</p>
-                </div>
-            </div>
-
-            <!-- Market Insights Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4">
-                <div
-                    class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9">
-                        </path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-slate-800 text-sm mb-1">Market Insights</h3>
-                    <p class="text-sm text-slate-600">Average Lead Time for this<br />Fabric: <span
-                            class="font-bold text-slate-900">14-21 days</span></p>
-                </div>
-            </div>
-
-            <!-- Visual Specs Card (Color Extraction mock) text extraction tool! -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 relative">
-                <h3 class="font-bold text-slate-800 text-sm mb-4">Visual Specs</h3>
-
-                <div id="visual-specs-palette" class="space-y-4 mb-6">
-                    <div class="text-sm text-slate-500 text-center py-4">No palette extracted yet. Upload a design file
-                        and extract the palette to get started.</div>
-                </div>
-
-                <input type="file" id="ai-color-extraction-input" accept="image/*" class="hidden">
-                <button type="button" id="extract-palette-btn"
-                    class="w-full flex items-center justify-center gap-2 bg-[#1b4478] text-white font-medium py-2 rounded-lg text-sm shadow-sm hover:bg-blue-800 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01">
-                        </path>
-                    </svg>
-                    <span>Extract Palette</span>
-                </button>
-            </div>
-
-            <!-- Logistics Estimator Card -->
-            <div
-                class="bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-xl shadow-sm border border-blue-100 p-5 hidden step-3-sidebar-item">
-                <div class="flex items-center gap-3 mb-3">
-                    <div
-                        class="w-8 h-8 rounded-lg bg-[#2563eb] text-white flex items-center justify-center shadow-inner">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-slate-800 text-sm">Transit Time Insights</h3>
-                </div>
-                <div class="bg-white rounded border border-blue-50 p-3 shadow-sm text-sm">
-                    <p class="text-slate-600 mb-1">Estimated Transit (Asia to US West Coast):</p>
-                    <p class="font-extrabold text-[#1b4478] text-lg flex items-center gap-2" id="transit-estimate-text">
-                        ~30-35 Days
-                        <span class="text-xs font-medium bg-blue-100 text-[#2563eb] px-2 py-0.5 rounded-full">Sea
-                            Freight</span>
-                    </p>
-                </div>
-                <p class="text-xs text-slate-400 mt-3 italic">* Estimates based on global averages and current port
-                    congestion metrics.</p>
-            </div>
-
-            <!-- Supplier Reach Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 pt-6 pb-6">
-                <h3 class="font-bold text-slate-800 text-sm mb-2">Supplier Reach</h3>
-                <div class="text-3xl font-extrabold text-slate-900 mb-2">45</div>
-                <p class="text-xs text-slate-500 leading-tight">Verified suppliers will receive<br />your request.
-                </p>
-            </div>
-
-            <!-- Main CTA -->
-            <div class="pt-4">
-                <button type="button" id="sidebar-next-btn"
-                    class="w-full bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg text-sm shadow-md transition transform hover:-translate-y-0.5">Save
-                    & Continue</button>
-                <!-- Actual hidden submit button -->
-                <button type="submit" id="sidebar-submit-btn"
-                    class="hidden w-full bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg text-sm shadow-md transition transform hover:-translate-y-0.5">Publish
-                    RFQ to Verified Suppliers 🚀</button>
             </div>
 
         </div>
-
     </form>
-</div>
+
+    <!-- STICKY BOTTOM BAR -->
+    <div class="fixed bottom-0 left-0 right-0 z-40 glassmorphism border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]" id="bottom-bar">
+        <div class="max-w-[860px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <button type="button" id="btn-back"
+                class="hidden px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Back
+            </button>
+            <span class="text-sm font-semibold text-slate-500" id="bottom-step-label">Step 1 of 4</span>
+            <button type="button" id="btn-next"
+                class="px-6 py-2.5 rounded-lg text-sm font-bold text-white bg-[#1b4478] hover:bg-[#143560] shadow-md transition flex items-center gap-1.5">
+                Next
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
+    // ===== STEP NAVIGATION =====
+    let currentStep = 1;
+    const totalSteps = 4;
+    const panels = document.querySelectorAll('.step-panel');
+    const progressSteps = document.querySelectorAll('.progress-step');
+    const connectors = document.querySelectorAll('.step-connector');
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+    const bottomBar = document.getElementById('bottom-bar');
+    const stepLabel = document.getElementById('bottom-step-label');
 
-        // Calculate Completeness Score Dynamically
-        const updateCompleteness = () => {
-            let score = 20; // Base score
+    function goToStep(step) {
+        if (step < 1 || step > totalSteps) return;
+        const direction = step > currentStep ? 'right' : 'left';
+        currentStep = step;
 
-            const category = document.querySelector('select[name="product_category"]').value;
-            if (category) score += 10;
-
-            const title = document.querySelector('input[name="title"]').value;
-            if (title.length > 5) score += 10;
-
-            const activeFabric = document.querySelector('.fabric-btn.bg-\\[\\#2563eb\\]');
-            if (activeFabric) score += 15;
-
-            const rows = document.querySelectorAll('#size-table-body tr');
-            let hasValidRow = false;
-            rows.forEach(row => {
-                const sizeInput = row.querySelector('input[name="b_size[]"]');
-                const colorInput = row.querySelector('input[name="b_color[]"]');
-                const qtyInput = row.querySelector('input[name="b_qty[]"]');
-                if (sizeInput && colorInput && qtyInput && sizeInput.value.trim() !== '' && colorInput.value.trim() !== '' && parseInt(qtyInput.value) > 0) {
-                    hasValidRow = true;
-                }
-            });
-            if (hasValidRow) score += 20;
-
-
-            const compliance = document.querySelectorAll('input[name="compliance[]"]:checked');
-            if (compliance.length > 0) score += 10;
-
-            // Update UI Donut
-            const circle = document.querySelector('.donut-progress');
-            const text = document.querySelector('.donut-text');
-
-            // Circumference of 15.9155 r circle is ~100
-            circle.setAttribute('stroke-dasharray', `${score}, 100`);
-            text.textContent = `${score}%`;
-
-            const detailText = document.querySelector('.completeness-detail');
-            if (score > 80) detailText.innerHTML = `<span class="font-bold text-slate-800">Completeness: Excellent -</span><br/>Ready for Best Quotes`;
-            else if (score > 50) detailText.innerHTML = `<span class="font-bold text-slate-800">Completeness: Good -</span><br/>More details help accuracy`;
-            else detailText.innerHTML = `<span class="font-bold text-slate-800">Completeness: Poor -</span><br/>Please fill required fields`;
-        };
-
-        // Fabric Button Toggle Logic
-        const fabricBtns = document.querySelectorAll('.fabric-btn');
-        fabricBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                fabricBtns.forEach(b => {
-                    b.className = 'fabric-btn px-4 py-1.5 bg-slate-100 text-slate-600 text-sm hover:bg-blue-600 hover:text-white hover:border-transparent transition rounded-md border border-slate-200';
-                });
-                btn.className = 'fabric-btn px-4 py-1.5 bg-[#2563eb] text-white text-sm rounded-md shadow-sm';
-                // Store value in hidden input for form submission
-                document.getElementById('hidden_fabric').value = btn.textContent;
-                updateCompleteness();
-            });
-        });
-
-        // Urgency Button Toggle Logic
-        const urgencyBtns = document.querySelectorAll('.urgency-btn');
-        urgencyBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                urgencyBtns.forEach(b => {
-                    b.className = 'urgency-btn flex-1 text-center py-1.5 text-sm font-medium text-slate-600 rounded-md hover:bg-blue-600 hover:text-white transition';
-                });
-                btn.className = 'urgency-btn flex-1 text-center py-1.5 text-sm font-medium text-white bg-[#2563eb] rounded-md shadow-sm';
-                document.getElementById('hidden_urgency').value = btn.textContent.toUpperCase();
-            });
-        });
-
-        // Listeners for inputs
-        document.querySelectorAll('input[name="title"], select[name="product_category"], input[name="compliance[]"]').forEach(el => {
-            el.addEventListener('change', updateCompleteness);
-            el.addEventListener('input', updateCompleteness);
-        });
-
-        // Initial calculate
-        updateCompleteness();
-
-        // Dynamic Table Row Logic
-        const tableBody = document.getElementById('size-table-body');
-        const addRowBtn = document.getElementById('add-row-btn');
-        const totalQtySpan = document.getElementById('total-qty');
-
-        function createRow(size = '', color = '', qty = '') {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-            <td class="px-2 py-2"><input type="text" name="b_size[]" value="${size}" class="w-full border-none focus:ring-1 focus:ring-[#2563eb] rounded p-1 text-sm bg-transparent" placeholder="e.g. L"></td>
-            <td class="px-2 py-2 border-l border-slate-200"><input type="text" name="b_color[]" value="${color}" class="w-full border-none focus:ring-1 focus:ring-[#2563eb] rounded p-1 text-sm bg-transparent" placeholder="e.g. Navy"></td>
-            <td class="px-2 py-2 border-l border-slate-200 flex items-center justify-between group">
-                <input type="number" name="b_qty[]" value="${qty}" class="w-20 border-none focus:ring-1 focus:ring-[#2563eb] rounded p-1 text-sm bg-transparent qty-input" min="0" placeholder="0">
-                <button type="button" class="text-red-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-opacity remove-row-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            </td>
-        `;
-            tableBody.appendChild(tr);
-
-            // Attach logic to new row
-            tr.querySelector('.remove-row-btn').addEventListener('click', () => {
-                tr.remove();
-                calculateTotal();
-                updateCompleteness();
-            });
-            tr.querySelector('.qty-input').addEventListener('input', () => {
-                calculateTotal();
-                updateCompleteness();
-            });
-            tr.querySelectorAll('input').forEach(i => i.addEventListener('input', updateCompleteness));
-        }
-
-        function calculateTotal() {
-            let total = 0;
-            document.querySelectorAll('.qty-input').forEach(input => {
-                total += parseInt(input.value) || 0;
-            });
-            totalQtySpan.textContent = total.toLocaleString();
-            document.getElementById('hidden_total_qty').value = total;
-        }
-
-        addRowBtn.addEventListener('click', () => createRow());
-
-        // Create initial rows
-        createRow('S', 'Black', '1000');
-        createRow('M', 'White', '1000');
-        createRow('L', 'Navy', '1000');
-        calculateTotal();
-
-        // ------------------------------
-        // Multi-Step Navigation Logic
-        // ------------------------------
-        let activeStep = 1;
-        const totalSteps = 4;
-
-        const nextBtn = document.getElementById('sidebar-next-btn');
-        const submitBtn = document.getElementById('sidebar-submit-btn');
-        const steppersArray = document.querySelectorAll('.stepper-item');
-        const contentContainers = document.querySelectorAll('.step-content');
-
-        function goToStep(stepNumber) {
-            if (stepNumber < 1 || stepNumber > totalSteps) return;
-
-            // Hide all content blocks
-            contentContainers.forEach(container => {
-                container.classList.add('hidden');
-            });
-
-            // Show target content
-            const targetContainer = document.querySelector(`.step-content[data-step="${stepNumber}"]`);
-            if (targetContainer) {
-                targetContainer.classList.remove('hidden');
-            }
-
-            // Update Stepper UI
-            steppersArray.forEach(stepper => {
-                const stepVal = parseInt(stepper.getAttribute('data-step'));
-                const icon = stepper.querySelector('.step-icon');
-
-                if (stepVal < stepNumber) {
-                    // Completed Step (Blue)
-                    stepper.className = "flex items-center text-[#2563eb] gap-2 cursor-pointer transition-colors stepper-item";
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
-                    icon.setAttribute('fill', 'none');
-                } else if (stepVal === stepNumber) {
-                    // Current Step (Blue Focus)
-                    stepper.className = "flex items-center text-[#2563eb] gap-2 cursor-pointer font-bold transition-colors stepper-item";
-                    if (stepVal === 1) icon.innerHTML = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />';
-                    if (stepVal === 2) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>';
-                    if (stepVal === 3) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>';
-                    if (stepVal === 4) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
-                    icon.setAttribute('fill', stepVal === 1 ? 'currentColor' : 'none');
-                } else {
-                    // Future Step (Grey)
-                    stepper.className = "flex items-center text-slate-500 gap-2 cursor-pointer transition-colors stepper-item";
-                    if (stepVal === 2) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>';
-                    if (stepVal === 3) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>';
-                    if (stepVal === 4) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
-                    icon.setAttribute('fill', 'none');
-                }
-            });
-
-            // Show/Hide Sidebar Elements based on Step
-            if (stepNumber === 3) {
-                document.querySelectorAll('.step-3-sidebar-item').forEach(el => el.classList.remove('hidden'));
+        panels.forEach(p => {
+            const s = parseInt(p.dataset.step);
+            if (s === currentStep) {
+                p.classList.add('active');
+                p.classList.remove('animate-slide-in-left', 'animate-slide-in-right');
+                void p.offsetWidth;
+                p.classList.add(direction === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left');
             } else {
-                document.querySelectorAll('.step-3-sidebar-item').forEach(el => el.classList.add('hidden'));
+                p.classList.remove('active');
             }
-
-            // Buttons UI Update
-            if (stepNumber === totalSteps) {
-                nextBtn.classList.add('hidden');
-                submitBtn.classList.remove('hidden');
-            } else {
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
-            }
-
-            activeStep = stepNumber;
-        }
-
-        // Stepper Click Navigation
-        steppersArray.forEach(stepper => {
-            stepper.addEventListener('click', () => {
-                const targetStep = parseInt(stepper.getAttribute('data-step'));
-                goToStep(targetStep);
-            });
         });
 
-        // Sidebar Main Action Button
-        nextBtn.addEventListener('click', (e) => {
+        progressSteps.forEach(ps => {
+            const s = parseInt(ps.dataset.step);
+            const dot = ps.querySelector('.step-dot');
+            const label = ps.querySelector('span:last-child');
+            if (s < currentStep) {
+                dot.className = 'step-dot w-8 h-8 rounded-full border-2 border-[#1b4478] bg-[#1b4478] text-white text-xs font-bold flex items-center justify-center transition-all shrink-0';
+                dot.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
+                if (label) label.className = 'text-xs font-semibold text-[#1b4478] hidden sm:block';
+            } else if (s === currentStep) {
+                dot.className = 'step-dot w-8 h-8 rounded-full border-2 border-[#1b4478] bg-[#1b4478] text-white text-xs font-bold flex items-center justify-center transition-all shrink-0';
+                dot.textContent = s;
+                if (label) label.className = 'text-xs font-semibold text-[#1b4478] hidden sm:block';
+            } else {
+                dot.className = 'step-dot w-8 h-8 rounded-full border-2 border-slate-300 bg-white text-slate-400 text-xs font-bold flex items-center justify-center transition-all shrink-0';
+                dot.textContent = s;
+                if (label) label.className = 'text-xs font-semibold text-slate-400 hidden sm:block';
+            }
+        });
+
+        connectors.forEach(c => {
+            const afterStep = parseInt(c.dataset.after);
+            c.className = afterStep < currentStep
+                ? 'step-connector flex-1 h-[2px] bg-[#1b4478] mx-1 transition-colors'
+                : 'step-connector flex-1 h-[2px] bg-slate-200 mx-1 transition-colors';
+        });
+
+        stepLabel.textContent = 'Step ' + currentStep + ' of ' + totalSteps;
+        btnBack.style.display = currentStep === 1 ? 'none' : 'flex';
+
+        if (currentStep === totalSteps) {
+            bottomBar.classList.add('hidden');
+            updateReviewSummary();
+        } else {
+            bottomBar.classList.remove('hidden');
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.goToStep = goToStep;
+
+    btnNext.addEventListener('click', () => goToStep(currentStep + 1));
+    btnBack.addEventListener('click', () => goToStep(currentStep - 1));
+    progressSteps.forEach(ps => {
+        ps.addEventListener('click', () => goToStep(parseInt(ps.dataset.step)));
+    });
+
+    // ===== URGENCY TOGGLE =====
+    document.querySelectorAll('.urgency-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            goToStep(activeStep + 1);
-            // Smooth scroll to top of form area
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('ring-2', 'ring-red-300', 'ring-amber-300', 'ring-emerald-300'));
+            const v = btn.dataset.value;
+            if (v === 'LOW') btn.classList.add('ring-2', 'ring-emerald-300');
+            else if (v === 'MEDIUM') btn.classList.add('ring-2', 'ring-amber-300');
+            else btn.classList.add('ring-2', 'ring-red-300');
+            document.getElementById('hidden_urgency').value = v;
         });
+    });
 
-        // Review Summary dynamic population
-        function updateReviewSummary() {
-            document.getElementById('summary-title').textContent = document.querySelector('input[name="title"]').value || 'Untitled';
-            document.getElementById('summary-category').textContent = document.querySelector('select[name="product_category"]').value || 'N/A';
-            document.getElementById('summary-fabric').textContent = document.getElementById('hidden_fabric').value || 'Cotton';
-            document.getElementById('summary-qty').textContent = document.getElementById('total-qty').textContent + ' units';
+    // ===== FABRIC TOGGLE =====
+    document.querySelectorAll('.fabric-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.fabric-btn').forEach(b => {
+                b.className = 'fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1b4478] hover:text-[#1b4478]';
+            });
+            btn.className = 'fabric-btn px-4 py-1.5 text-sm font-medium rounded-lg border transition border-[#1b4478] bg-[#1b4478] text-white';
+            document.getElementById('hidden_fabric').value = btn.dataset.value;
+        });
+    });
 
-            const shipping = document.getElementById('shipping-method-select');
-            if (shipping) document.getElementById('summary-shipping').textContent = shipping.value;
+    // ===== QUANTITY TABLE =====
+    const tableBody = document.getElementById('size-table-body');
+    const addRowBtn = document.getElementById('add-row-btn');
+    const totalQtySpan = document.getElementById('total-qty');
 
-            const targetDate = document.querySelector('input[name="target_delivery_date"]').value;
-            document.getElementById('summary-delivery').textContent = targetDate || 'To be finalized';
+    function createRow(size, color, qty) {
+        size = size || ''; color = color || ''; qty = qty || '';
+        const tr = document.createElement('tr');
+        tr.className = 'group';
+        tr.innerHTML =
+            '<td class="px-3 py-2"><input type="text" name="b_size[]" value="' + size + '" class="w-full border-none focus:ring-1 focus:ring-[#1b4478] rounded p-1 text-sm bg-transparent placeholder-slate-300" placeholder="e.g. L"></td>' +
+            '<td class="px-3 py-2 border-l border-slate-200"><input type="text" name="b_color[]" value="' + color + '" class="w-full border-none focus:ring-1 focus:ring-[#1b4478] rounded p-1 text-sm bg-transparent placeholder-slate-300" placeholder="e.g. Navy"></td>' +
+            '<td class="px-3 py-2 border-l border-slate-200 flex items-center justify-between">' +
+                '<input type="number" name="b_qty[]" value="' + qty + '" class="w-20 border-none focus:ring-1 focus:ring-[#1b4478] rounded p-1 text-sm bg-transparent qty-input placeholder-slate-300" min="0" placeholder="0">' +
+                '<button type="button" class="text-red-400 opacity-0 group-hover:opacity-100 hover:text-red-600 transition-opacity remove-row-btn ml-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>' +
+            '</td>';
+        tableBody.appendChild(tr);
+        tr.querySelector('.remove-row-btn').addEventListener('click', function() { tr.remove(); calculateTotal(); });
+        tr.querySelector('.qty-input').addEventListener('input', calculateTotal);
+    }
 
-            const incoterm = document.querySelector('select[name="incoterm"]').value;
-            document.getElementById('summary-incoterm').textContent = incoterm || 'FOB';
+    function calculateTotal() {
+        var total = 0;
+        document.querySelectorAll('.qty-input').forEach(function(i) { total += parseInt(i.value) || 0; });
+        totalQtySpan.textContent = total.toLocaleString();
+        document.getElementById('hidden_total_qty').value = total;
+    }
+
+    addRowBtn.addEventListener('click', function() { createRow(); });
+    createRow('S', 'Black', '1000');
+    createRow('M', 'White', '1000');
+    createRow('L', 'Navy', '1000');
+    calculateTotal();
+
+    // ===== GSM CUSTOM TOGGLE =====
+    var gsmSelect = document.getElementById('gsm-select');
+    if (gsmSelect) {
+        gsmSelect.addEventListener('change', function(e) {
+            var wrapper = document.getElementById('gsm-custom-input-wrapper');
+            if (e.target.value === 'Custom') { wrapper.classList.remove('hidden'); wrapper.querySelector('input').focus(); }
+            else { wrapper.classList.add('hidden'); }
+        });
+    }
+
+    // ===== TOGGLE SWITCHES =====
+    document.querySelectorAll('.toggle-switch').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            toggle.classList.toggle('active');
+            var isActive = toggle.classList.contains('active');
+            var targetId = toggle.dataset.target;
+            var targetEl = document.getElementById(targetId);
+            var hiddenId = toggle.id === 'toggle-proto' ? 'proto-sample-val' : 'pp-sample-val';
+            document.getElementById(hiddenId).value = isActive ? 'true' : 'false';
+            if (isActive) targetEl.classList.remove('hidden');
+            else targetEl.classList.add('hidden');
+        });
+    });
+
+    // ===== AI COLOR EXTRACTION =====
+    var dropZone = document.getElementById('color-drop-zone');
+    var fileInput = document.getElementById('ai-color-extraction-input');
+    var paletteContainer = document.getElementById('visual-specs-palette');
+    var colorSkeleton = document.getElementById('color-skeleton');
+
+    dropZone.addEventListener('click', function() { fileInput.click(); });
+
+    ['dragenter', 'dragover'].forEach(function(ev) {
+        dropZone.addEventListener(ev, function(e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    });
+    ['dragleave', 'drop'].forEach(function(ev) {
+        dropZone.addEventListener(ev, function(e) { e.preventDefault(); dropZone.classList.remove('drag-over'); });
+    });
+    dropZone.addEventListener('drop', function(e) {
+        var file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            var dt = new DataTransfer();
+            dt.items.add(file);
+            fileInput.files = dt.files;
+            fileInput.dispatchEvent(new Event('change'));
         }
+    });
 
-        // Add to DOM input listeners
-        document.querySelectorAll('input, select').forEach(el => {
-            el.addEventListener('change', updateReviewSummary);
-        });
-        updateReviewSummary();
+    fileInput.addEventListener('change', async function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        dropZone.classList.add('hidden');
+        colorSkeleton.classList.remove('hidden');
+        paletteContainer.innerHTML = '';
 
-        // ------------------------------
-        // Completeness Score Override for Step 4
-        // ------------------------------
+        var formData = new FormData();
+        formData.append('file', file);
 
-        // Let's hook into the goToStep and override the circle score to 100% when on Step 4
-        const originalGoToStep = goToStep;
-        goToStep = function (stepNumber) {
-            originalGoToStep(stepNumber);
+        try {
+            var response = await fetch('/api/extract-palette', { method: 'POST', body: formData });
+            if (!response.ok) throw new Error('Failed');
+            var data = await response.json();
 
-            const circle = document.querySelector('.donut-progress');
-            const text = document.querySelector('.donut-text');
-            const detailText = document.querySelector('.completeness-detail');
-            const scorecard = document.getElementById('score-card');
-
-            if (stepNumber === 4) {
-                // Glow 100% Mode
-                circle.setAttribute('stroke-dasharray', `100, 100`);
-                text.textContent = `100%`;
-                detailText.innerHTML = `<span class="font-bold text-slate-800">Completeness: Perfect -</span><br/>Ready for Launch!`;
-                scorecard.classList.add('score-100');
-            } else {
-                scorecard.classList.remove('score-100');
-                updateCompleteness(); // Reset back to dynamic calc
+            if (data.colors && data.colors.length > 0) {
+                var html = '<div class="space-y-2.5">';
+                data.colors.forEach(function(c, i) {
+                    html += '<div class="flex items-center gap-3 p-2 rounded-lg ' + (i === 0 ? 'bg-slate-50 border border-slate-200' : '') + '">' +
+                        '<div class="w-9 h-9 rounded-lg shadow-sm shrink-0 border border-white/50" style="background-color: ' + c.hex + '"></div>' +
+                        '<div><p class="text-sm font-bold text-slate-800">' + c.pantone + '</p>' +
+                        '<p class="text-xs text-slate-500">' + c.name + ' &middot; ' + c.hex + '</p>' +
+                        '<input type="hidden" name="pantone_colors[]" value="' + c.pantone + '"></div></div>';
+                });
+                html += '</div>';
+                paletteContainer.innerHTML = html;
             }
-        };
-
-        // ------------------------------
-        // Step 3 Sub-Logics
-        // ------------------------------
-
-        // Sampling Toggles Show/Hide Dates
-        document.querySelectorAll('.sample-toggle').forEach(toggle => {
-            toggle.addEventListener('change', (e) => {
-                const targetId = e.target.getAttribute('data-target');
-                const targetEl = document.getElementById(targetId);
-                if (e.target.checked) {
-                    targetEl.classList.remove('hidden');
-                } else {
-                    targetEl.classList.add('hidden');
-                }
-            });
-        });
-
-        // Shipping Estimator Magic Logic
-        const shippingSelect = document.getElementById('shipping-method-select');
-        const transitEstimateText = document.getElementById('transit-estimate-text');
-
-        if (shippingSelect && transitEstimateText) {
-            shippingSelect.addEventListener('change', (e) => {
-                const method = e.target.value;
-                if (method === 'Sea Freight') {
-                    transitEstimateText.innerHTML = `~30-35 Days <span class="text-xs font-medium bg-blue-100 text-[#2563eb] px-2 py-0.5 rounded-full">Sea Freight</span>`;
-                } else if (method === 'Air Freight') {
-                    transitEstimateText.innerHTML = `~4-7 Days <span class="text-xs font-medium bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full">Air Freight</span>`;
-                } else {
-                    transitEstimateText.innerHTML = `~14-21 Days <span class="text-xs font-medium bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded-full">Land/Rail</span>`;
-                }
-            });
+        } catch (err) {
+            console.error('Color extraction error:', err);
+            paletteContainer.innerHTML = '<p class="text-sm text-red-500 py-2">Could not extract colors. Try a different image.</p>';
+        } finally {
+            colorSkeleton.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            fileInput.value = '';
         }
+    });
 
-        // GSM Custom Toggle
-        const gsmSelect = document.getElementById('gsm-select');
-        if (gsmSelect) {
-            gsmSelect.addEventListener('change', (e) => {
-                const wrapper = document.getElementById('gsm-custom-input-wrapper');
-                if (e.target.value === 'Custom') {
-                    wrapper.classList.remove('hidden');
-                    // Focus logic (optional)
-                    wrapper.querySelector('input').focus();
-                } else {
-                    wrapper.classList.add('hidden');
-                }
-            });
-        }
-        // AI Color Extraction Logic
-        const extractBtn = document.getElementById('extract-palette-btn');
-        const fileInput = document.getElementById('ai-color-extraction-input');
-        const paletteContainer = document.getElementById('visual-specs-palette');
+    // ===== REVIEW SUMMARY =====
+    function updateReviewSummary() {
+        var title = document.querySelector('input[name="title"]');
+        document.getElementById('summary-title').textContent = title ? (title.value || '—') : '—';
+        var cat = document.querySelector('select[name="product_category"]');
+        document.getElementById('summary-category').textContent = cat ? (cat.value || '—') : '—';
+        document.getElementById('summary-fabric').textContent = document.getElementById('hidden_fabric').value || '—';
+        document.getElementById('summary-qty').textContent = (document.getElementById('total-qty').textContent || '0') + ' units';
 
-        if (extractBtn && fileInput && paletteContainer) {
-            extractBtn.addEventListener('click', () => {
-                fileInput.click();
-            });
+        var certs = [];
+        document.querySelectorAll('input[name="compliance[]"]:checked').forEach(function(c) { certs.push(c.value.replace('_', '-')); });
+        document.getElementById('summary-certs').textContent = certs.length > 0 ? certs.join(', ') : 'None';
 
-            fileInput.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
+        var pkg = document.querySelector('input[name="packaging_type"]:checked');
+        document.getElementById('summary-packaging').textContent = pkg ? pkg.value : '—';
 
-                // Set loading state
-                const originalBtnText = extractBtn.innerHTML;
-                extractBtn.innerHTML = `
-                    <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                `;
-                extractBtn.disabled = true;
+        var gsm = document.getElementById('gsm-select');
+        document.getElementById('summary-gsm').textContent = gsm ? (gsm.value || '—') : '—';
 
-                const formData = new FormData();
-                formData.append('file', file);
+        var del = document.querySelector('input[name="target_delivery_date"]');
+        document.getElementById('summary-delivery').textContent = del && del.value ? del.value : 'To be finalized';
 
-                try {
-                    const response = await fetch('/api/extract-palette', {
-                        method: 'POST',
-                        body: formData
-                    });
+        var ship = document.getElementById('shipping-method-select');
+        document.getElementById('summary-shipping').textContent = ship ? ship.value : '—';
 
-                    if (!response.ok) {
-                        throw new Error('Failed to extract colors');
-                    }
+        var inc = document.querySelector('select[name="incoterm"]');
+        document.getElementById('summary-incoterm').textContent = inc ? inc.value : '—';
+    }
 
-                    const data = await response.json();
-
-                    if (data.colors && data.colors.length > 0) {
-                        // Build UI
-                        let html = '';
-
-                        // Main color
-                        const primary = data.colors[0];
-                        html += `
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full shadow-sm shrink-0" style="background-color: ${primary.hex}"></div>
-                                <div class="text-xs">
-                                    <p class="font-bold text-slate-800">${primary.pantone}</p>
-                                    <p class="text-slate-500">${primary.name}</p>
-                                    <input type="hidden" name="pantone_colors[]" value="${primary.pantone}">
-                                </div>
-                            </div>
-                        `;
-
-                        // Secondary colors
-                        if (data.colors.length > 1) {
-                            html += `
-                                <div class="pt-2 border-t border-slate-100">
-                                    <h4 class="font-bold text-slate-800 text-xs mb-3">Primary Colors (Pantone)</h4>
-                            `;
-                            for (let i = 1; i < data.colors.length; i++) {
-                                const c = data.colors[i];
-                                html += `
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-8 h-8 rounded-full shadow-sm shrink-0" style="background-color: ${c.hex}"></div>
-                                        <div class="text-xs">
-                                            <p class="font-bold text-slate-800">${c.pantone}</p>
-                                            <p class="text-slate-500">${c.name}</p>
-                                            <input type="hidden" name="pantone_colors[]" value="${c.pantone}">
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                            html += `</div>`;
-                        }
-
-                        paletteContainer.innerHTML = html;
-                        updateCompleteness();
-                    }
-
-                } catch (err) {
-                    console.error("Color extraction error:", err);
-                    alert("Could not extract colors from this image. Please ensure it is a valid image file.");
-                } finally {
-                    extractBtn.innerHTML = originalBtnText;
-                    extractBtn.disabled = false;
-                    // Reset file input so same file can trigger change again if needed
-                    fileInput.value = '';
-                }
-            });
-        }
-
-    });    </script>
-
+    goToStep(1);
+});
+</script>
 {% endblock %}
