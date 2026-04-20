@@ -384,6 +384,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="mt-6 border-t border-slate-100 pt-6">
+                    <div class="flex flex-col items-center justify-center">
+                        <button type="button" id="btn-predict-price"
+                            class="mb-4 py-3 px-8 rounded-full text-sm font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:shadow-[0_0_20px_rgba(147,51,234,0.5)] transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                            ✨ Get AI Market Estimate
+                        </button>
+                        <div id="prediction-result" class="hidden w-full max-w-md mx-auto text-center">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Action buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 mt-6">
                     <button type="button" id="btn-save-draft"
@@ -686,6 +697,58 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(function() { toast.remove(); }, 5000);
     }
 
+    // ===== AI MARKET ESTIMATE =====
+    var btnPredict = document.getElementById('btn-predict-price');
+    var resultDiv = document.getElementById('prediction-result');
+
+    if (btnPredict) {
+        btnPredict.addEventListener('click', async function() {
+            var cat = document.querySelector('select[name="product_category"]');
+            var catVal = cat ? cat.value || 'Knit' : 'Knit';
+            var fabric = document.getElementById('hidden_fabric').value || 'Cotton';
+            var quantity = parseInt(document.getElementById('hidden_total_qty').value || '0');
+            var urgency = document.getElementById('hidden_urgency').value || 'MEDIUM';
+            var certs = [];
+            document.querySelectorAll('input[name="compliance[]"]:checked').forEach(function(c) { certs.push(c.value); });
+            
+            btnPredict.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Analyzing Market...';
+            btnPredict.disabled = true;
+
+            try {
+                var response = await fetch('/api/predict-price', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        category: catVal,
+                        fabric: fabric,
+                        quantity: quantity,
+                        urgency: urgency,
+                        certifications: certs
+                    })
+                });
+                
+                var data = await response.json();
+                
+                resultDiv.innerHTML = 
+                    '<div class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-purple-100 rounded-xl p-5 mb-4 animate-fade-in-up">' +
+                        '<div class="text-xs font-bold text-purple-600 mb-1 uppercase tracking-wider">AI Projected Target Price</div>' +
+                        '<div class="text-3xl font-extrabold text-slate-800">$' + data.estimated_min.toFixed(2) + ' - $' + data.estimated_max.toFixed(2) + ' <span class="text-sm font-semibold text-slate-500">/ unit</span></div>' +
+                        '<p class="text-xs text-slate-500 mt-2">Based on chosen ' + fabric + ' fabric, ' + quantity.toLocaleString() + ' quantity, and current material rates.</p>' +
+                    '</div>';
+                
+                resultDiv.classList.remove('hidden');
+                btnPredict.innerHTML = '✨ Get AI Market Estimate';
+                btnPredict.disabled = false;
+                
+            } catch (err) {
+                console.error(err);
+                btnPredict.innerHTML = '✨ Get AI Market Estimate';
+                btnPredict.disabled = false;
+                showToast('Failed to connect to AI engine.', 'error');
+            }
+        });
+    }
+
     // ===== INLINE FIELD ERROR =====
     function clearAllErrors() {
         document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
@@ -699,6 +762,53 @@ document.addEventListener('DOMContentLoaded', () => {
         msg.className = 'field-error-msg';
         msg.textContent = message;
         input.parentNode.appendChild(msg);
+    }
+
+    // ===== SAVE AS DRAFT =====
+    var btnDraft = document.getElementById('btn-save-draft');
+    if (btnDraft) {
+        btnDraft.addEventListener('click', function(e) {
+            e.preventDefault();
+            clearAllErrors();
+
+            var originalHTML = btnDraft.innerHTML;
+            btnDraft.disabled = true;
+            btnDraft.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Saving...';
+
+            var formData = new FormData(rfqForm);
+            formData.append("status", "DRAFT");
+
+            fetch('/rfq/create', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function(response) {
+                return response.json().then(function(data) {
+                    return { ok: response.ok, data: data };
+                });
+            })
+            .then(function(result) {
+                if (result.data.success) {
+                    showToast('Saved to Drafts!', 'success');
+                    btnDraft.innerHTML = 'Saved to Drafts!';
+                    setTimeout(function() { 
+                        btnDraft.innerHTML = originalHTML; 
+                        btnDraft.disabled = false;
+                    }, 3000);
+                } else {
+                    showToast('Failed to save draft.', 'error');
+                    btnDraft.disabled = false;
+                    btnDraft.innerHTML = originalHTML;
+                }
+            })
+            .catch(function(err) {
+                console.error(err);
+                showToast('Network error while saving draft.', 'error');
+                btnDraft.disabled = false;
+                btnDraft.innerHTML = originalHTML;
+            });
+        });
     }
 
     // ===== FETCH FORM SUBMISSION =====

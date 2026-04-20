@@ -103,8 +103,8 @@ async def process_supplier_verification(request: Request):
         )
         
         # --- Handle multiple certifications ---
-        cert_types = form_data.getlist("cert_type")
-        cert_numbers = form_data.getlist("cert_number")
+        cert_types = form_data.getlist("cert_types[]")
+        cert_numbers = form_data.getlist("cert_numbers[]")
         certifications = []
         for i, (ct, cn) in enumerate(zip(cert_types, cert_numbers)):
             if cn and cn.strip():
@@ -116,6 +116,7 @@ async def process_supplier_verification(request: Request):
                     verification_status=VerificationStatusEnum.PENDING
                 )
                 certifications.append(cert.model_dump())
+
             
         # --- MongoDB Insertion ---
         if database.db is not None:
@@ -314,7 +315,7 @@ async def process_rfq_creation(request: Request):
             shipping_method=form_data.get("shipping_method"),
             destination_port=form_data.get("destination_port"),
             
-            status=RFQStatusEnum.OPEN,
+            status=RFQStatusEnum.DRAFT if form_data.get("status") == "DRAFT" else RFQStatusEnum.OPEN,
             deadline=None,
             special_instructions="",
             tech_pack_url=None,
@@ -386,6 +387,61 @@ async def submit_quote(request: Request):
 # ----------------------------------------
 # AI TOOLS MODULE
 # ----------------------------------------
+
+BASE_RATES = {
+    "Cotton": 3.50,
+    "Polyester": 2.20,
+    "Linen": 5.00,
+    "Blend": 3.00,
+    "Silk": 8.50,
+    "Unknown": 3.00
+}
+
+def calculate_predicted_price(category: str, fabric: str, quantity: int, urgency: str, certifications: list) -> dict:
+    base = BASE_RATES.get(fabric, 3.00)
+    
+    # Volume discount
+    if quantity > 10000:
+        base *= 0.90
+    elif quantity > 5000:
+        base *= 0.95
+        
+    # Urgency premium
+    if urgency == "HIGH":
+        base *= 1.15
+    elif urgency == "LOW":
+        base *= 0.95
+        
+    # Certification costs
+    base += len(certifications) * 0.20
+    
+    estimated_min = base * 0.92
+    estimated_max = base * 1.08
+    
+    return {
+        "estimated_min": round(estimated_min, 2),
+        "estimated_max": round(estimated_max, 2)
+    }
+
+from pydantic import BaseModel
+class PredictPriceRequest(BaseModel):
+    category: str
+    fabric: str
+    quantity: int
+    urgency: str
+    certifications: list
+
+@app.post("/api/predict-price")
+async def predict_price(payload: PredictPriceRequest):
+    result = calculate_predicted_price(
+        payload.category, 
+        payload.fabric, 
+        payload.quantity, 
+        payload.urgency, 
+        payload.certifications
+    )
+    return result
+
 PANTONE_COLORS = [
     ((19, 42, 63), "PANTONE 19-4052 TCX", "Classic Blue", "#1b4478"),
     ((65, 64, 60), "PANTONE 19-4033 TCX", "Classic Grey", "#41403c"),
