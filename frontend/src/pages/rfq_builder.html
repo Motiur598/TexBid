@@ -43,7 +43,7 @@
     </div>
 
     <!-- FORM BODY -->
-    <form action="/rfq/create" method="POST" id="rfq-form">
+    <form action="/rfq/create" method="POST" id="rfq-form" novalidate>
         <div class="max-w-[860px] mx-auto px-4 sm:px-6 py-8 pb-32">
 
             <!-- STEP 1: Basic Details -->
@@ -669,6 +669,141 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     goToStep(1);
+
+    // ===== TOAST NOTIFICATION =====
+    function showToast(message, type) {
+        var existing = document.getElementById('toast-msg');
+        if (existing) existing.remove();
+        var colors = type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white';
+        var toast = document.createElement('div');
+        toast.id = 'toast-msg';
+        toast.className = 'fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-2xl text-sm font-bold flex items-center gap-2 animate-fade-in-up ' + colors;
+        toast.innerHTML = (type === 'success'
+            ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+            : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>')
+            + message;
+        document.body.appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 5000);
+    }
+
+    // ===== INLINE FIELD ERROR =====
+    function clearAllErrors() {
+        document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+        document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
+    }
+    function showFieldError(fieldName, message) {
+        var input = document.querySelector('[name="' + fieldName + '"]');
+        if (!input) return;
+        input.classList.add('field-error');
+        var msg = document.createElement('p');
+        msg.className = 'field-error-msg';
+        msg.textContent = message;
+        input.parentNode.appendChild(msg);
+    }
+
+    // ===== FETCH FORM SUBMISSION =====
+    var rfqForm = document.getElementById('rfq-form');
+    rfqForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        clearAllErrors();
+
+        // Client-side validation
+        var errors = {};
+        var titleVal = (rfqForm.querySelector('[name="title"]').value || '').trim();
+        if (!titleVal) errors['title'] = 'RFQ title is required';
+        var catVal = rfqForm.querySelector('[name="product_category"]').value;
+        if (!catVal) errors['product_category'] = 'Product category is required';
+
+        if (Object.keys(errors).length > 0) {
+            for (var key in errors) showFieldError(key, errors[key]);
+            showToast('Please fix the errors highlighted in Step 1', 'error');
+            goToStep(1);
+            return;
+        }
+
+        var submitBtn = document.getElementById('btn-submit-rfq');
+        var originalHTML = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Submitting...';
+
+        var formData = new FormData(rfqForm);
+
+        fetch('/rfq/create', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: formData
+        })
+        .then(function(response) {
+            return response.json().then(function(data) {
+                return { ok: response.ok, data: data };
+            });
+        })
+        .then(function(result) {
+            if (result.data.success) {
+                showToast('RFQ submitted successfully!', 'success');
+                showRFQSuccessState(result.data);
+            } else {
+                clearAllErrors();
+                var errs = result.data.errors || {};
+                if (errs['_general']) {
+                    showToast(errs['_general'], 'error');
+                } else {
+                    for (var f in errs) showFieldError(f, errs[f]);
+                    showToast('Please fix the errors below', 'error');
+                    goToStep(1);
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
+            }
+        })
+        .catch(function(err) {
+            console.error('RFQ submission error:', err);
+            showToast('Network error — please try again', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHTML;
+        });
+    });
+
+    // ===== RFQ SUCCESS STATE =====
+    function showRFQSuccessState(data) {
+        bottomBar.classList.add('hidden');
+        var formArea = document.querySelector('#rfq-form');
+        formArea.innerHTML =
+            '<div class="max-w-[860px] mx-auto px-4 sm:px-6 py-16">' +
+                '<div class="flex flex-col items-center justify-center">' +
+                    '<svg class="checkmark-svg w-20 h-20 mb-6" viewBox="0 0 52 52">' +
+                        '<circle class="circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>' +
+                        '<path class="check" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>' +
+                    '</svg>' +
+                    '<h2 class="text-2xl font-bold text-slate-900 mb-2">RFQ Submitted!</h2>' +
+                    '<p class="text-sm text-slate-500 text-center max-w-md mb-6">Your RFQ <strong>' + (data.rfq_title || '') + '</strong> (' + (data.quantity || 0).toLocaleString() + ' units) has been published. Suppliers will start bidding shortly.</p>' +
+                '</div>' +
+                '<div class="bg-white rounded-xl border border-[#E5E7EB] p-6 mb-6">' +
+                    '<div class="flex items-center gap-3 mb-4">' +
+                        '<div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">' +
+                            '<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' +
+                        '</div>' +
+                        '<div>' +
+                            '<h3 class="font-bold text-slate-800">Live on Marketplace</h3>' +
+                            '<p class="text-xs text-slate-400">Suppliers can now view and bid on your RFQ</p>' +
+                        '</div>' +
+                        '<span class="ml-auto inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-3 py-1.5 rounded-full">OPEN</span>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">' +
+                        '<div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 mb-0.5">RFQ ID</p><p class="font-mono font-bold text-slate-700 text-xs">' + (data.rfq_id || '—') + '</p></div>' +
+                        '<div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 mb-0.5">Status</p><p class="font-bold text-emerald-600">Open for Bidding</p></div>' +
+                        '<div class="bg-slate-50 rounded-lg p-3"><p class="text-xs text-slate-400 mb-0.5">Total Units</p><p class="font-bold text-slate-800">' + (data.quantity || 0).toLocaleString() + '</p></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="flex gap-3 justify-center">' +
+                    '<a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-[#1b4478] text-white font-bold text-sm rounded-lg hover:bg-[#143560] shadow-md transition">' +
+                        '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>' +
+                        'Return to Home</a>' +
+                    '<a href="/rfq/create" class="inline-flex items-center gap-2 px-6 py-3 border border-[#1b4478] text-[#1b4478] font-bold text-sm rounded-lg hover:bg-[#1b4478]/5 transition">Create Another RFQ</a>' +
+                '</div>' +
+            '</div>';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 });
 </script>
 {% endblock %}

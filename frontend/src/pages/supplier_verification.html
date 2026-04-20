@@ -99,7 +99,7 @@
         {% else %}
 
         <!-- ===== VERIFICATION FORM ===== -->
-        <form action="/verify/supplier" method="POST" enctype="multipart/form-data" class="space-y-6" id="verification-form">
+        <form action="/verify/supplier" method="POST" enctype="multipart/form-data" class="space-y-6" id="verification-form" novalidate>
 
             <!-- Section 1: Company Info -->
             <div class="bg-white rounded-xl border border-[#E5E7EB] overflow-hidden animate-fade-in-up">
@@ -117,7 +117,7 @@
                 <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Official Business Name <span class="text-red-400">*</span></label>
-                        <input type="text" name="company_name" required
+                        <input type="text" name="company_name"
                             class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition"
                             placeholder="e.g. Pacific Garments Ltd.">
                     </div>
@@ -146,13 +146,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Business License Number <span class="text-red-400">*</span></label>
-                            <input type="text" name="business_license_no" required
+                            <input type="text" name="business_license_no"
                                 class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition"
                                 placeholder="Official Gov ID">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Trade License Number <span class="text-red-400">*</span></label>
-                            <input type="text" name="trade_license_no" required
+                            <input type="text" name="trade_license_no"
                                 class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition"
                                 placeholder="e.g. TL-2024-00123">
                         </div>
@@ -162,7 +162,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Upload Business License <span class="text-red-400">*</span></label>
                         <div class="upload-zone border-2 border-dashed border-slate-300 rounded-xl p-6 text-center cursor-pointer hover:bg-slate-50 hover:border-[#1b4478]/40 transition relative" data-input="business_license_file">
-                            <input type="file" name="business_license_file" accept=".pdf,.jpg,.png" required class="hidden file-input">
+                            <input type="file" name="business_license_file" accept=".pdf,.jpg,.png" class="hidden file-input">
                             <div class="upload-content">
                                 <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                 <p class="text-sm font-medium text-slate-600">Click to upload or drag and drop</p>
@@ -197,7 +197,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Primary Manufacturing Type <span class="text-red-400">*</span></label>
-                            <select name="manufacturing_type" required
+                            <select name="manufacturing_type"
                                 class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                                 <option value="" disabled selected>Select Category...</option>
                                 <option value="Knit">Knitwear</option>
@@ -216,7 +216,7 @@
                                 </div>
                                 <label class="text-xs font-semibold text-slate-500 uppercase">Workers</label>
                             </div>
-                            <input type="number" name="total_workers" min="1" required placeholder="e.g. 1500"
+                            <input type="number" name="total_workers" min="1" placeholder="e.g. 1500"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                         </div>
                         <div class="stat-card bg-slate-50 rounded-xl border border-[#E5E7EB] p-4">
@@ -226,7 +226,7 @@
                                 </div>
                                 <label class="text-xs font-semibold text-slate-500 uppercase">Machines</label>
                             </div>
-                            <input type="number" name="total_machines" min="1" required placeholder="e.g. 500"
+                            <input type="number" name="total_machines" min="1" placeholder="e.g. 500"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                         </div>
                         <div class="stat-card bg-slate-50 rounded-xl border border-[#E5E7EB] p-4">
@@ -236,7 +236,7 @@
                                 </div>
                                 <label class="text-xs font-semibold text-slate-500 uppercase">Turnover (USD)</label>
                             </div>
-                            <input type="number" name="annual_turnover" min="0" step="0.01" required placeholder="5,000,000"
+                            <input type="number" name="annual_turnover" min="0" step="0.01" placeholder="5,000,000"
                                 class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">
                         </div>
                     </div>
@@ -292,6 +292,200 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ===== TOAST NOTIFICATION =====
+    function showToast(message, type) {
+        var existing = document.getElementById('toast-msg');
+        if (existing) existing.remove();
+        var colors = type === 'success' 
+            ? 'bg-emerald-600 text-white' 
+            : 'bg-red-600 text-white';
+        var toast = document.createElement('div');
+        toast.id = 'toast-msg';
+        toast.className = 'fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-2xl text-sm font-bold flex items-center gap-2 animate-fade-in-up ' + colors;
+        toast.innerHTML = (type === 'success' 
+            ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+            : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>')
+            + message;
+        document.body.appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 5000);
+    }
+
+    // ===== INLINE FIELD ERROR =====
+    function clearAllErrors() {
+        document.querySelectorAll('.field-error').forEach(function(el) { el.classList.remove('field-error'); });
+        document.querySelectorAll('.field-error-msg').forEach(function(el) { el.remove(); });
+    }
+
+    function showFieldError(fieldName, message) {
+        var input = document.querySelector('[name="' + fieldName + '"]');
+        if (!input) return;
+        input.classList.add('field-error');
+        var msg = document.createElement('p');
+        msg.className = 'field-error-msg';
+        msg.textContent = message;
+        input.parentNode.appendChild(msg);
+    }
+
+    // ===== CLIENT-SIDE VALIDATION =====
+    function validateForm() {
+        clearAllErrors();
+        var errors = {};
+        var form = document.getElementById('verification-form');
+        
+        var companyName = form.querySelector('[name="company_name"]').value.trim();
+        if (!companyName) errors['company_name'] = 'Company name is required';
+        
+        var blNo = form.querySelector('[name="business_license_no"]').value.trim();
+        if (!blNo) errors['business_license_no'] = 'Business license number is required';
+        
+        var tlNo = form.querySelector('[name="trade_license_no"]').value.trim();
+        if (!tlNo) errors['trade_license_no'] = 'Trade license number is required';
+
+        var mfgType = form.querySelector('[name="manufacturing_type"]').value;
+        if (!mfgType) errors['manufacturing_type'] = 'Select a manufacturing type';
+        
+        var workers = parseInt(form.querySelector('[name="total_workers"]').value) || 0;
+        if (workers < 1) errors['total_workers'] = 'Must have at least 1 worker';
+        
+        var machines = parseInt(form.querySelector('[name="total_machines"]').value) || 0;
+        if (machines < 1) errors['total_machines'] = 'Must have at least 1 machine';
+        
+        // Show inline errors
+        for (var key in errors) {
+            showFieldError(key, errors[key]);
+        }
+        
+        return Object.keys(errors).length === 0;
+    }
+
+    // ===== FETCH FORM SUBMISSION =====
+    var form = document.getElementById('verification-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Client-side validation first
+            if (!validateForm()) {
+                showToast('Please fix the errors below', 'error');
+                // Scroll to first error
+                var firstError = document.querySelector('.field-error');
+                if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            var submitBtn = document.getElementById('submit-btn');
+            var originalHTML = submitBtn.innerHTML;
+            
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Submitting...';
+            
+            var formData = new FormData(form);
+            
+            fetch('/verify/supplier', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function(response) { 
+                return response.json().then(function(data) {
+                    return { ok: response.ok, data: data };
+                });
+            })
+            .then(function(result) {
+                if (result.data.success) {
+                    showToast('Profile submitted for verification!', 'success');
+                    // Transition to success state
+                    showSuccessState(result.data.company_name);
+                } else {
+                    // Server-side validation errors
+                    clearAllErrors();
+                    var errors = result.data.errors || {};
+                    
+                    if (errors['_general']) {
+                        showToast(errors['_general'], 'error');
+                    } else {
+                        for (var field in errors) {
+                            showFieldError(field, errors[field]);
+                        }
+                        showToast('Please fix the errors below', 'error');
+                        var firstError = document.querySelector('.field-error');
+                        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalHTML;
+                }
+            })
+            .catch(function(err) {
+                console.error('Submission error:', err);
+                showToast('Network error — please try again', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
+            });
+        });
+    }
+
+    // ===== SUCCESS STATE TRANSITION (no page reload) =====
+    function showSuccessState(companyName) {
+        var formContainer = document.querySelector('.max-w-\\[900px\\].mx-auto.px-4.sm\\:px-6.py-8');
+        if (!formContainer) return;
+        
+        formContainer.innerHTML = 
+            '<div class="animate-fade-in-up">' +
+                '<div class="flex flex-col items-center justify-center py-12">' +
+                    '<svg class="checkmark-svg w-20 h-20 mb-6" viewBox="0 0 52 52">' +
+                        '<circle class="circle" cx="26" cy="26" r="25" fill="none" stroke="#10b981" stroke-width="2"/>' +
+                        '<path class="check" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>' +
+                    '</svg>' +
+                    '<h2 class="text-2xl font-bold text-slate-900 mb-2">Verification Submitted</h2>' +
+                    '<p class="text-sm text-slate-500 text-center max-w-md">Your supplier profile <strong>' + (companyName || '') + '</strong> has been submitted for review. Our compliance team will verify your documents within 2-3 business days.</p>' +
+                '</div>' +
+                '<div class="bg-white rounded-xl border border-[#E5E7EB] p-6 mb-6">' +
+                    '<div class="flex items-center gap-3 mb-5">' +
+                        '<div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">' +
+                            '<svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>' +
+                        '</div>' +
+                        '<div>' +
+                            '<h3 class="font-bold text-slate-800">Pending Review</h3>' +
+                            '<p class="text-xs text-slate-400">Your profile is locked during verification</p>' +
+                        '</div>' +
+                        '<span class="ml-auto inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1.5 rounded-full">' +
+                            '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>' +
+                            'In Progress' +
+                        '</span>' +
+                    '</div>' +
+                    '<div class="flex items-start gap-4">' +
+                        '<div class="flex flex-col items-center">' +
+                            '<div class="w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100"></div>' +
+                            '<div class="w-0.5 h-10 bg-emerald-300"></div>' +
+                            '<div class="w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-100"></div>' +
+                            '<div class="w-0.5 h-10 bg-slate-200"></div>' +
+                            '<div class="w-3 h-3 rounded-full bg-slate-300 ring-4 ring-slate-100"></div>' +
+                        '</div>' +
+                        '<div class="space-y-5">' +
+                            '<div><p class="text-sm font-semibold text-slate-800">Profile Submitted</p><p class="text-xs text-slate-400">Just now</p></div>' +
+                            '<div><p class="text-sm font-semibold text-amber-700">Under Review</p><p class="text-xs text-slate-400">Compliance team will verify documents</p></div>' +
+                            '<div><p class="text-sm font-semibold text-slate-400">Verification Complete</p><p class="text-xs text-slate-400">Estimated: 2-3 business days</p></div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="text-center mt-8">' +
+                    '<a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-[#1b4478] text-white font-bold text-sm rounded-lg hover:bg-[#143560] shadow-md transition">' +
+                        '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>' +
+                        'Return to Home' +
+                    '</a>' +
+                    '&nbsp;&nbsp;' +
+                    '<a href="/suppliers/list" class="inline-flex items-center gap-2 px-6 py-3 border border-[#1b4478] text-[#1b4478] font-bold text-sm rounded-lg hover:bg-[#1b4478]/5 transition">' +
+                        'View All Suppliers' +
+                    '</a>' +
+                '</div>' +
+            '</div>';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // ===== FILE UPLOAD ZONES =====
     document.querySelectorAll('.upload-zone').forEach(function(zone) {
@@ -353,45 +547,47 @@ document.addEventListener('DOMContentLoaded', function() {
         else certsEmpty.classList.add('hidden');
     }
 
-    addCertBtn.addEventListener('click', function() {
-        certCounter++;
-        var card = document.createElement('div');
-        card.className = 'cert-entry cert-card bg-slate-50 border border-[#E5E7EB] rounded-xl p-4 animate-fade-in-up';
-        card.innerHTML =
-            '<div class="flex items-center justify-between mb-3">' +
-                '<span class="text-xs font-bold text-slate-500 uppercase">Certification #' + certCounter + '</span>' +
-                '<button type="button" class="remove-cert text-red-400 hover:text-red-600 transition text-xs font-bold flex items-center gap-1">' +
-                    '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Remove' +
-                '</button>' +
-            '</div>' +
-            '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
-                '<div>' +
-                    '<label class="block text-xs font-medium text-slate-500 mb-1">Certification Type</label>' +
-                    '<select name="cert_type" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
-                        '<option value="ISO_9001">ISO 9001 (Quality)</option>' +
-                        '<option value="WRAP">WRAP (Ethical)</option>' +
-                        '<option value="OEKO_TEX">OEKO-TEX (Safe Textiles)</option>' +
-                        '<option value="BSCI">BSCI</option>' +
-                        '<option value="OTHER">Other</option>' +
-                    '</select>' +
+    if (addCertBtn) {
+        addCertBtn.addEventListener('click', function() {
+            certCounter++;
+            var card = document.createElement('div');
+            card.className = 'cert-entry cert-card bg-slate-50 border border-[#E5E7EB] rounded-xl p-4 animate-fade-in-up';
+            card.innerHTML =
+                '<div class="flex items-center justify-between mb-3">' +
+                    '<span class="text-xs font-bold text-slate-500 uppercase">Certification #' + certCounter + '</span>' +
+                    '<button type="button" class="remove-cert text-red-400 hover:text-red-600 transition text-xs font-bold flex items-center gap-1">' +
+                        '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Remove' +
+                    '</button>' +
                 '</div>' +
-                '<div>' +
-                    '<label class="block text-xs font-medium text-slate-500 mb-1">Certificate Number</label>' +
-                    '<input type="text" name="cert_number" placeholder="e.g. ISO-2024-0012" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
-                '</div>' +
-                '<div>' +
-                    '<label class="block text-xs font-medium text-slate-500 mb-1">Upload Proof</label>' +
-                    '<input type="file" name="cert_file" accept=".pdf,.jpg,.png" class="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1b4478]/10 file:text-[#1b4478] hover:file:bg-[#1b4478]/20 cursor-pointer">' +
-                '</div>' +
-            '</div>';
-        certsContainer.insertBefore(card, certsEmpty);
-        updateEmptyState();
-
-        card.querySelector('.remove-cert').addEventListener('click', function() {
-            card.remove();
+                '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
+                    '<div>' +
+                        '<label class="block text-xs font-medium text-slate-500 mb-1">Certification Type</label>' +
+                        '<select name="cert_type" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
+                            '<option value="ISO_9001">ISO 9001 (Quality)</option>' +
+                            '<option value="WRAP">WRAP (Ethical)</option>' +
+                            '<option value="OEKO_TEX">OEKO-TEX (Safe Textiles)</option>' +
+                            '<option value="BSCI">BSCI</option>' +
+                            '<option value="OTHER">Other</option>' +
+                        '</select>' +
+                    '</div>' +
+                    '<div>' +
+                        '<label class="block text-xs font-medium text-slate-500 mb-1">Certificate Number</label>' +
+                        '<input type="text" name="cert_number" placeholder="e.g. ISO-2024-0012" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
+                    '</div>' +
+                    '<div>' +
+                        '<label class="block text-xs font-medium text-slate-500 mb-1">Upload Proof</label>' +
+                        '<input type="file" name="cert_file" accept=".pdf,.jpg,.png" class="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1b4478]/10 file:text-[#1b4478] hover:file:bg-[#1b4478]/20 cursor-pointer">' +
+                    '</div>' +
+                '</div>';
+            certsContainer.insertBefore(card, certsEmpty);
             updateEmptyState();
+
+            card.querySelector('.remove-cert').addEventListener('click', function() {
+                card.remove();
+                updateEmptyState();
+            });
         });
-    });
+    }
 });
 </script>
 {% endblock %}
