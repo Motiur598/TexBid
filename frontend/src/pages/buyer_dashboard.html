@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Dashboard - TexBid{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 min-h-[calc(100vh-80px)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+        <!-- Page Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+                <div class="text-xs font-medium text-slate-500 mb-2 flex items-center gap-2">
+                    <span>Dashboard</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <span>Active Orders</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <span class="text-slate-800 font-bold">{{ order.id }}</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2">{{ order.title }}</h1>
+                <div class="flex flex-wrap items-center gap-4 text-sm">
+                    <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-1.5 shadow-sm">
+                        <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-[10px]">TF</div>
+                        <span class="font-semibold text-slate-700">{{ supplier.name }}</span>
+                        <span class="text-slate-400">•</span>
+                        <span class="text-slate-500">{{ supplier.location }}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-lg px-3 py-1.5">
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                        <span class="text-sm font-bold text-blue-700">{{ order.status }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Deadline in</span>
+                <span class="text-2xl font-extrabold text-slate-900">{{ order.timeline.days_to_deadline }}</span>
+                <span class="text-sm font-bold text-slate-500">days</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- CORE FEATURE 2: Milestone Tracking Timeline                  -->
+        <!-- ============================================================ -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex flex-wrap justify-between items-center gap-3">
+                <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                    <svg class="w-5 h-5 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Order Progress
+                </h2>
+                <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-slate-200 text-xs font-bold text-slate-500">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    Live Updates
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <!-- Desktop: Horizontal Timeline -->
+                <div class="hidden md:block">
+                    <div class="flex items-start justify-between relative">
+                        <!-- Background connecting line -->
+                        <div class="absolute top-5 left-[calc(8.33%)] right-[calc(8.33%)] h-0.5 bg-slate-200 z-0"></div>
+                        <!-- Progress fill -->
+                        <div class="absolute top-5 left-[calc(8.33%)] h-0.5 bg-emerald-500 z-[1] transition-all duration-700"
+                             style="width: {{ order.timeline.progress_percentage }}%"></div>
+
+                        {% for milestone in milestones_timeline %}
+                        <div class="relative z-10 flex flex-col items-center" style="width: 16.66%">
+                            <!-- Node -->
+                            {% if milestone.status == 'COMPLETED' %}
+                            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20 border-4 border-white">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                            {% elif milestone.status == 'IN_PROGRESS' %}
+                            <div class="w-10 h-10 rounded-full bg-brand-light text-white flex items-center justify-center shadow-lg shadow-blue-500/30 border-4 border-white milestone-pulse">
+                                <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            </div>
+                            {% else %}
+                            <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-300 flex items-center justify-center border-4 border-white shadow-sm">
+                                <div class="w-3 h-3 rounded-full bg-slate-200"></div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Label -->
+                            <div class="mt-3 text-center px-1">
+                                <p class="text-xs font-bold {% if milestone.status == 'PENDING' %}text-slate-300{% else %}text-slate-800{% endif %} leading-tight">
+                                    {{ milestone.name }}
+                                </p>
+                                {% if milestone.status == 'COMPLETED' and milestone.timestamp %}
+                                <p class="text-[10px] font-medium text-emerald-600 mt-1">{{ milestone.timestamp }}</p>
+                                {% elif milestone.status == 'IN_PROGRESS' %}
+                                <p class="text-[10px] font-bold text-brand-light mt-1 animate-pulse">In Progress</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Mobile: Vertical Timeline -->
+                <div class="md:hidden space-y-6 relative pl-8">
+                    <!-- Vertical line -->
+                    <div class="absolute top-2 left-[18px] bottom-2 w-0.5 bg-slate-200"></div>
+
+                    {% for milestone in milestones_timeline %}
+                    <div class="relative flex items-start gap-4">
+                        <!-- Node -->
+                        {% if milestone.status == 'COMPLETED' %}
+                        <div class="absolute left-[-22px] w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md border-2 border-white z-10">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        {% elif milestone.status == 'IN_PROGRESS' %}
+                        <div class="absolute left-[-22px] w-8 h-8 rounded-full bg-brand-light text-white flex items-center justify-center shadow-md border-2 border-white z-10 milestone-pulse">
+                            <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </div>
+                        {% else %}
+                        <div class="absolute left-[-22px] w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center border-2 border-white z-10">
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Content -->
+                        <div class="pt-0.5">
+                            <p class="text-sm font-bold {% if milestone.status == 'PENDING' %}text-slate-300{% else %}text-slate-800{% endif %}">
+                                {{ milestone.name }}
+                            </p>
+                            {% if milestone.status == 'COMPLETED' and milestone.timestamp %}
+                            <p class="text-xs text-emerald-600 font-medium mt-0.5">{{ milestone.timestamp }}</p>
+                            {% elif milestone.status == 'IN_PROGRESS' %}
+                            <p class="text-xs text-brand-light font-bold mt-0.5 animate-pulse">Currently Active</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ============================================================ -->
+        <!-- CORE FEATURE 1: Multi-Currency Financial Summary             -->
+        <!-- ============================================================ -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex flex-wrap justify-between items-center gap-3">
+                <h2 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                    <svg class="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Financial Summary
+                </h2>
+                <!-- Currency Toggle -->
+                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg" id="currency-toggle">
+                    <button data-currency="USD" class="currency-btn active-currency px-3 py-1.5 rounded-md text-xs font-bold transition-all">USD</button>
+                    <button data-currency="EUR" class="currency-btn px-3 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-700 transition-all">EUR</button>
+                    <button data-currency="BDT" class="currency-btn px-3 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-700 transition-all">BDT</button>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Total Value Card -->
+                    <div class="lg:col-span-2 bg-brand-dark rounded-xl p-6 md:p-8 text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-brand-primary/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Total Contract Value</p>
+                        <div class="relative">
+                            <div id="total-value-display" class="currency-value-transition">
+                                <span id="total-value" class="text-4xl md:text-5xl font-extrabold tracking-tight"></span>
+                                <span id="total-currency-label" class="text-xl font-bold text-slate-400 ml-2"></span>
+                            </div>
+                            <div class="mt-4 flex items-center gap-2 text-sm text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                <span>Base: <strong class="text-slate-300">${{ "{:,.0f}".format(order.base_value_usd) }} USD</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supplier Quick Stats -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Platform Rating</p>
+                            <p class="text-lg font-bold text-slate-800 flex items-center gap-1">
+                                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                {{ supplier.rating }}
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">On-Time Delivery</p>
+                            <p class="text-lg font-bold text-emerald-600">{{ supplier.on_time_delivery }}</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Response Rate</p>
+                            <p class="text-lg font-bold text-brand-light">{{ supplier.response_rate }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Milestones -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {% for key, ms in order.milestones.items() %}
+                    <div class="bg-slate-50 rounded-lg p-5 border border-slate-100 hover:shadow-md hover:border-slate-200 transition-all">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{{ ms.label }}</p>
+                        <p class="milestone-value text-xl font-extrabold text-slate-900 currency-value-transition"
+                           data-base-amount="{{ ms.amount }}"></p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-brand-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-extrabold text-slate-900">{{ "{:,}".format(order.timeline.units_ordered) }}</p>
+                    <p class="text-xs font-medium text-slate-500">Units Ordered</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-extrabold text-slate-900">{{ order.timeline.progress_percentage }}%</p>
+                    <p class="text-xs font-medium text-slate-500">Progress</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-amber-50 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-extrabold text-slate-900">{{ order.timeline.days_to_deadline }}</p>
+                    <p class="text-xs font-medium text-slate-500">Days to Deadline</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-lg font-extrabold text-slate-900">{{ supplier.location }}</p>
+                    <p class="text-xs font-medium text-slate-500">Origin</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Multi-Currency JavaScript Logic -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const EXCHANGE_RATES = {{ exchange_rates | tojson }};
+    const BASE_VALUE = {{ order.base_value_usd }};
+    const SYMBOLS = { USD: '$', EUR: '€', BDT: '৳' };
+
+    let currentCurrency = 'USD';
+
+    const totalValueEl = document.getElementById('total-value');
+    const totalCurrencyEl = document.getElementById('total-currency-label');
+    const milestoneEls = document.querySelectorAll('.milestone-value');
+    const currencyBtns = document.querySelectorAll('.currency-btn');
+
+    function formatNumber(value, currency) {
+        return SYMBOLS[currency] + new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    function updateValues(currency) {
+        const rate = EXCHANGE_RATES[currency] || 1;
+
+        // Animate out
+        totalValueEl.parentElement.classList.add('currency-fade-out');
+        milestoneEls.forEach(el => el.classList.add('currency-fade-out'));
+
+        setTimeout(() => {
+            // Update total
+            totalValueEl.textContent = formatNumber(BASE_VALUE * rate, currency);
+            totalCurrencyEl.textContent = currency;
+
+            // Update milestones
+            milestoneEls.forEach(el => {
+                const baseAmount = parseFloat(el.dataset.baseAmount);
+                el.textContent = formatNumber(baseAmount * rate, currency);
+            });
+
+            // Animate in
+            totalValueEl.parentElement.classList.remove('currency-fade-out');
+            milestoneEls.forEach(el => el.classList.remove('currency-fade-out'));
+        }, 250);
+    }
+
+    // Button click handlers
+    currencyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const newCurrency = btn.dataset.currency;
+            if (newCurrency === currentCurrency) return;
+
+            currentCurrency = newCurrency;
+
+            // Update active state
+            currencyBtns.forEach(b => {
+                b.classList.remove('active-currency');
+                b.classList.add('text-slate-500');
+            });
+            btn.classList.add('active-currency');
+            btn.classList.remove('text-slate-500');
+
+            updateValues(newCurrency);
+        });
+    });
+
+    // Initial render
+    updateValues('USD');
+});
+</script>
+{% endblock %}

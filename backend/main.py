@@ -384,6 +384,62 @@ async def submit_quote(request: Request):
     })
 
 # ----------------------------------------
+# BUYER DASHBOARD MODULE (Core Features 1 & 2)
+# ----------------------------------------
+
+@app.get("/dashboard/buyer", response_class=HTMLResponse)
+async def buyer_dashboard(request: Request):
+    """
+    Buyer Dashboard: Shows active order tracking with
+    Multi-Currency Support (Feature 1) and Milestone Timeline (Feature 2).
+    """
+    order = {
+        "id": "#ORD-2024-9921Z",
+        "title": "10,000 pcs 100% Cotton Men's T-Shirts",
+        "status": "In Production",
+        "base_value_usd": 45000.00,
+        "milestones": {
+            "advance": {"label": "Advance Payment (30%)", "amount": 13500.00},
+            "shipment": {"label": "Upon Shipment (50%)", "amount": 22500.00},
+            "delivery": {"label": "Final Delivery (20%)", "amount": 9000.00},
+        },
+        "timeline": {
+            "progress_percentage": 35,
+            "current_step": "Cutting",
+            "days_to_deadline": 14,
+            "units_ordered": 10000,
+        },
+    }
+
+    supplier = {
+        "name": "TexFab Industries Ltd.",
+        "location": "Dhaka, BD",
+        "rating": 4.8,
+        "on_time_delivery": "99.1%",
+        "response_rate": "< 1 hour",
+    }
+
+    exchange_rates = {"USD": 1, "EUR": 0.92, "BDT": 110.00}
+
+    milestones_timeline = [
+        {"name": "Order Placed",    "status": "COMPLETED",   "timestamp": "Oct 12, 10:00 AM"},
+        {"name": "Fabric Sourcing", "status": "COMPLETED",   "timestamp": "Oct 14, 02:30 PM"},
+        {"name": "Cutting",         "status": "IN_PROGRESS", "timestamp": None},
+        {"name": "Sewing",          "status": "PENDING",     "timestamp": None},
+        {"name": "Finishing",        "status": "PENDING",     "timestamp": None},
+        {"name": "Shipping",        "status": "PENDING",     "timestamp": None},
+    ]
+
+    return templates.TemplateResponse("buyer_dashboard.html", {
+        "request": request,
+        "order": order,
+        "supplier": supplier,
+        "exchange_rates": exchange_rates,
+        "milestones_timeline": milestones_timeline,
+    })
+
+
+# ----------------------------------------
 # AI TOOLS MODULE
 # ----------------------------------------
 PANTONE_COLORS = [
