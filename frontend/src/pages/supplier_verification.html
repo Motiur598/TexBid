@@ -562,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
                     '<div>' +
                         '<label class="block text-xs font-medium text-slate-500 mb-1">Certification Type</label>' +
-                        '<select name="cert_type" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
+                        '<select name="cert_types[]" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
                             '<option value="ISO_9001">ISO 9001 (Quality)</option>' +
                             '<option value="WRAP">WRAP (Ethical)</option>' +
                             '<option value="OEKO_TEX">OEKO-TEX (Safe Textiles)</option>' +
@@ -572,11 +572,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     '</div>' +
                     '<div>' +
                         '<label class="block text-xs font-medium text-slate-500 mb-1">Certificate Number</label>' +
-                        '<input type="text" name="cert_number" placeholder="e.g. ISO-2024-0012" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
+                        '<input type="text" name="cert_numbers[]" placeholder="e.g. ISO-2024-0012" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1b4478] focus:ring-2 focus:ring-[#1b4478]/10 transition">' +
                     '</div>' +
                     '<div>' +
                         '<label class="block text-xs font-medium text-slate-500 mb-1">Upload Proof</label>' +
-                        '<input type="file" name="cert_file" accept=".pdf,.jpg,.png" class="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1b4478]/10 file:text-[#1b4478] hover:file:bg-[#1b4478]/20 cursor-pointer">' +
+                        '<input type="file" name="cert_files[]" accept=".pdf,.jpg,.png" class="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1b4478]/10 file:text-[#1b4478] hover:file:bg-[#1b4478]/20 cursor-pointer">' +
                     '</div>' +
                 '</div>';
             certsContainer.insertBefore(card, certsEmpty);
